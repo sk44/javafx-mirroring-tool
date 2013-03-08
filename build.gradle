@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/javafx.plugin'
+
+defaultTasks 'clean', 'assemble'
+
+sourceCompatibility = '1.7'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+group = 'sk44.mirroringtool'
+version = '1.0.0-SNAPSHOT'
+
+javafx {
+    mainClass = 'sk44.mirroringtool.Main'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '1.4'
+}
