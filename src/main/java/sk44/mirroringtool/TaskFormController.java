@@ -13,14 +13,21 @@ import javafx.fxml.Initializable;
 /**
  * FXML Controller class
  *
- * @author kudoh
+ * @author sk
  */
-public class MainWindowController implements Initializable {
+public class TaskFormController implements Initializable {
 
 	@FXML
-	protected void handleNewTaskAction(ActionEvent event) {
-		WindowEventListeners.INSTANCE.fire(WindowEventListeners.Events.ON_OPEN_TASK_FORM);
+	protected void handleOKAction(ActionEvent event) {
+		// TODO creation
+		WindowEventListeners.INSTANCE.fire(WindowEventListeners.Events.ON_CLOSE_TASK_FORM);
 	}
+
+	@FXML
+	protected void handleCancelAction(ActionEvent event) {
+		WindowEventListeners.INSTANCE.fire(WindowEventListeners.Events.ON_CLOSE_TASK_FORM);
+	}
+
 	/**
 	 * Initializes the controller class.
 	 */

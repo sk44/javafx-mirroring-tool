@@ -4,17 +4,25 @@
  */
 package sk44.mirroringtool;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- *
+ * JavaFX entry point.
+ * 
  * @author sk
  */
 public class Main extends Application {
+
+	private Stage primaryStage;
+	private Stage formStage;
 
 	/**
 	 * @param args the command line arguments
@@ -25,9 +33,52 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+
+		primaryStage = stage;
+		initListeners();
+
 		stage.setTitle("Mirroring Tool");
-		Scene scene = new Scene((Pane) FXMLLoader.load(getClass().getResource("mainWindow.fxml")));
+		Scene scene = new Scene(loadPaneFromFXML("mainWindow.fxml"));
 		stage.setScene(scene);
 		stage.show();
+	}
+
+	void initListeners() {
+		// TODO サブウィンドウのイベント通知方法を検討
+		WindowEventListeners listeners = WindowEventListeners.INSTANCE;
+		listeners.addListener(WindowEventListeners.Events.ON_OPEN_TASK_FORM, 
+			new WindowEventListener() {
+			@Override
+			public void handleEvent() {
+				showTaskForm();
+			}
+		});
+		listeners.addListener(WindowEventListeners.Events.ON_CLOSE_TASK_FORM, new WindowEventListener() {
+			@Override
+			public void handleEvent() {
+				closeTaskForm();
+			}
+		});
+	}
+
+	void showTaskForm() {
+		formStage = new Stage();
+		formStage.initModality(Modality.APPLICATION_MODAL);
+		formStage.initOwner(primaryStage);
+		Scene scene = new Scene(loadPaneFromFXML("taskForm.fxml"));
+		formStage.setScene(scene);
+		formStage.show();
+	}
+
+	void closeTaskForm() {
+		formStage.close();
+	}
+
+	private Pane loadPaneFromFXML(String fxmlPath) {
+		try {
+			return (Pane) FXMLLoader.load(getClass().getResource(fxmlPath));
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 }
