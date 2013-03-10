@@ -25,18 +25,26 @@
           <children>
             <TableView prefHeight="174.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columns>
+                <TableColumn prefWidth="75.0" text="Active" />
                 <TableColumn editable="false" prefWidth="75.0" sortable="false" text="Title" />
-                <TableColumn editable="false" prefWidth="75.0" text="From" />
-                <TableColumn editable="false" prefWidth="75.0" text="To" />
+                <TableColumn editable="false" prefWidth="75.0" text="Master" />
+                <TableColumn editable="false" prefWidth="75.0" text="Backup" />
                 <TableColumn editable="false" prefWidth="75.0" text="Last Executed" />
-                <TableColumn editable="false" prefWidth="75.0" text="Summary" />
+                <TableColumn editable="false" prefWidth="75.0" text="Result" />
               </columns>
             </TableView>
           </children>
         </AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="190.0" prefWidth="598.0">
           <children>
-            <TextArea prefHeight="180.0" prefWidth="598.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <TableView prefHeight="180.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="Process" />
+                <TableColumn prefWidth="75.0" text="File" />
+                <TableColumn prefWidth="75.0" text="Master" />
+                <TableColumn prefWidth="75.0" text="Backup" />
+              </columns>
+            </TableView>
           </children>
         </AnchorPane>
       </items>

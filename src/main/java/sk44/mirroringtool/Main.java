@@ -5,8 +5,6 @@
 package sk44.mirroringtool;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -63,6 +61,7 @@ public class Main extends Application {
 
 	void showTaskForm() {
 		formStage = new Stage();
+		formStage.setTitle("New Task");
 		formStage.initModality(Modality.APPLICATION_MODAL);
 		formStage.initOwner(primaryStage);
 		Scene scene = new Scene(loadPaneFromFXML("taskForm.fxml"));

@@ -3,5 +3,12 @@
  */
 
 .mainFxmlClass {
+}
 
+.grid {
+	-fx-padding: 10;
+}
+
+.button {
+	-fx-margin: 10;
 }
