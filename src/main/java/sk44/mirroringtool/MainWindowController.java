@@ -19,7 +19,7 @@ public class MainWindowController implements Initializable {
 
 	@FXML
 	protected void handleNewTaskAction(ActionEvent event) {
-		WindowEventListeners.INSTANCE.fire(WindowEventListeners.Events.ON_OPEN_TASK_FORM);
+		WindowEventListeners.INSTANCE.notify(WindowEvents.ON_OPEN_TASK_FORM);
 	}
 	/**
 	 * Initializes the controller class.

@@ -44,14 +44,14 @@ public class Main extends Application {
 	void initListeners() {
 		// TODO サブウィンドウのイベント通知方法を検討
 		WindowEventListeners listeners = WindowEventListeners.INSTANCE;
-		listeners.addListener(WindowEventListeners.Events.ON_OPEN_TASK_FORM, 
+		listeners.addListener(WindowEvents.ON_OPEN_TASK_FORM, 
 			new WindowEventListener() {
 			@Override
 			public void handleEvent() {
 				showTaskForm();
 			}
 		});
-		listeners.addListener(WindowEventListeners.Events.ON_CLOSE_TASK_FORM, new WindowEventListener() {
+		listeners.addListener(WindowEvents.ON_CLOSE_TASK_FORM, new WindowEventListener() {
 			@Override
 			public void handleEvent() {
 				closeTaskForm();

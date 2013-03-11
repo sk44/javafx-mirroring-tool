@@ -20,12 +20,12 @@ public class TaskFormController implements Initializable {
 	@FXML
 	protected void handleOKAction(ActionEvent event) {
 		// TODO creation
-		WindowEventListeners.INSTANCE.fire(WindowEventListeners.Events.ON_CLOSE_TASK_FORM);
+		WindowEventListeners.INSTANCE.notify(WindowEvents.ON_CLOSE_TASK_FORM);
 	}
 
 	@FXML
 	protected void handleCancelAction(ActionEvent event) {
-		WindowEventListeners.INSTANCE.fire(WindowEventListeners.Events.ON_CLOSE_TASK_FORM);
+		WindowEventListeners.INSTANCE.notify(WindowEvents.ON_CLOSE_TASK_FORM);
 	}
 
 	/**

@@ -5,8 +5,6 @@
 package sk44.mirroringtool;
 
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
@@ -14,21 +12,16 @@ import java.util.Map;
  */
 enum WindowEventListeners {
 	
-	// TODO シングルトンじゃない何かにする
+	// TODO シングルトンじゃない何かにする？
 	INSTANCE;
 
-	enum Events {
-		ON_OPEN_TASK_FORM,
-		ON_CLOSE_TASK_FORM;
-	}
+	private final EnumMap<WindowEvents, WindowEventListener> listenerMap = new EnumMap<>(WindowEvents.class);
 
-	private final EnumMap<Events, WindowEventListener> listenerMap = new EnumMap<>(Events.class);
-
-	void addListener(Events events, WindowEventListener listener) {
+	void addListener(WindowEvents events, WindowEventListener listener) {
 		listenerMap.put(events, listener);
 	}
 
-	void fire(Events event) {
+	void notify(WindowEvents event) {
 		WindowEventListener listener = listenerMap.get(event);
 		if (listener == null) {
 			throw new RuntimeException("event " + event + " is not found in listeners.");
