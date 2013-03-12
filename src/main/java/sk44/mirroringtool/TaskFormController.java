@@ -4,11 +4,14 @@
  */
 package sk44.mirroringtool;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextField;
+import javafx.stage.DirectoryChooser;
 
 /**
  * FXML Controller class
@@ -16,6 +19,47 @@ import javafx.fxml.Initializable;
  * @author sk
  */
 public class TaskFormController implements Initializable {
+
+	interface ChosenDirectoryHandler {
+		void handleDir(File dir);
+	}
+
+	@FXML
+	private TextField taskName;
+	@FXML
+	private TextField masterDirPath;
+	@FXML
+	private TextField backupDirPath;
+
+	@FXML
+	protected void handleBrowseMasterDir(ActionEvent event) {
+		openDirectoryChooser("Choose Master Dir...", new ChosenDirectoryHandler() {
+			@Override
+			public void handleDir(File dir) {
+				masterDirPath.setText(dir.getAbsolutePath());
+			}
+		});
+	}
+
+	@FXML
+	protected void handleBrowseBackupDir(ActionEvent event) {
+		openDirectoryChooser("Choose Backup Dir...", new ChosenDirectoryHandler() {
+			@Override
+			public void handleDir(File dir) {
+				backupDirPath.setText(dir.getAbsolutePath());
+			}
+		});
+	}
+
+	private void openDirectoryChooser(String title, ChosenDirectoryHandler handler) {
+		DirectoryChooser dc = new DirectoryChooser();
+		dc.setTitle(title);
+		// TODO set arg
+		File dir = dc.showDialog(null);
+		if (dir != null) {
+			handler.handleDir(dir);
+		}
+	}
 
 	@FXML
 	protected void handleOKAction(ActionEvent event) {

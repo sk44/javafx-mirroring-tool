@@ -11,10 +11,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * JavaFX entry point.
- * 
+ *
  * @author sk
  */
 public class Main extends Application {
@@ -44,8 +45,8 @@ public class Main extends Application {
 	void initListeners() {
 		// TODO サブウィンドウのイベント通知方法を検討
 		WindowEventListeners listeners = WindowEventListeners.INSTANCE;
-		listeners.addListener(WindowEvents.ON_OPEN_TASK_FORM, 
-			new WindowEventListener() {
+		listeners.addListener(WindowEvents.ON_OPEN_TASK_FORM,
+				new WindowEventListener() {
 			@Override
 			public void handleEvent() {
 				showTaskForm();
@@ -61,6 +62,7 @@ public class Main extends Application {
 
 	void showTaskForm() {
 		formStage = new Stage();
+		formStage.initStyle(StageStyle.UTILITY);
 		formStage.setTitle("New Task");
 		formStage.initModality(Modality.APPLICATION_MODAL);
 		formStage.initOwner(primaryStage);
