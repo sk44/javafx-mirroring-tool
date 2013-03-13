@@ -33,6 +33,14 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 
+		// TODO connection test. delete!
+//		EntityManagerFactory emf =
+//	                Persistence.createEntityManagerFactory("mirroring-toolPU");
+//       EntityManager em = emf.createEntityManager();
+//	        TypedQuery tquery = em.createQuery("select t from Task t", Task.class);
+//        List<Task> list = tquery.getResultList();
+//		System.out.println(list);
+
 		primaryStage = stage;
 		initListeners();
 
