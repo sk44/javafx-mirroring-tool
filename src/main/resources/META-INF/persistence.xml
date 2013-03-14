@@ -8,10 +8,10 @@
       <property name="javax.persistence.jdbc.password" value=""/>
       <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
       <property name="javax.persistence.jdbc.user" value=""/>
-      <property name="eclipselink.logging.file" value="D:/tmp/output.log"/>
+      <property name="eclipselink.logging.file" value="el.log"/>
       <property name="eclipselink.logging.level" value="FINE"/>
       <property name="eclipselink.logging.parameters" value="true"/>
-      <property name="eclipselink.ddl-generation" value="create-tables"/>
+	  <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
     </properties>
   </persistence-unit>
 </persistence>

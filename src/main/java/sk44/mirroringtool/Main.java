@@ -6,12 +6,14 @@ package sk44.mirroringtool;
 
 import java.io.IOException;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 /**
  * JavaFX entry point.
@@ -33,14 +35,6 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 
-		// TODO connection test. delete!
-//		EntityManagerFactory emf =
-//	                Persistence.createEntityManagerFactory("mirroring-toolPU");
-//       EntityManager em = emf.createEntityManager();
-//	        TypedQuery tquery = em.createQuery("select t from Task t", Task.class);
-//        List<Task> list = tquery.getResultList();
-//		System.out.println(list);
-
 		primaryStage = stage;
 		initListeners();
 
@@ -48,6 +42,12 @@ public class Main extends Application {
 		Scene scene = new Scene(loadPaneFromFXML("mainWindow.fxml"));
 		stage.setScene(scene);
 		stage.show();
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent t) {
+                System.out.println("stage will close...");
+            }
+        });
 	}
 
 	void initListeners() {

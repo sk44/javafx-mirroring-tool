@@ -4,7 +4,10 @@
  */
 package sk44.mirroringtool.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
@@ -16,9 +19,13 @@ import javax.persistence.Id;
 public class Task {
 
 	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(nullable = false, length = 50)
 	private String name;
+	@Column(nullable = false, length = 300)
 	private String masterDirPath;
+	@Column(nullable = false, length = 300)
 	private String backupDirPath;
 
 	public Long getId() {

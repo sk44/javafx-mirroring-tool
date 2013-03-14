@@ -12,6 +12,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
+import javax.persistence.EntityManager;
+import sk44.mirroringtool.domain.Task;
+import sk44.mirroringtool.infrastructure.persistence.jpa.EntityManagerFactoryProvider;
+import sk44.mirroringtool.infrastructure.persistence.jpa.JpaTaskRepository;
 
 /**
  * FXML Controller class
@@ -63,7 +67,19 @@ public class TaskFormController implements Initializable {
 
 	@FXML
 	protected void handleOKAction(ActionEvent event) {
-		// TODO creation
+
+        // TODO validate
+        Task task = new Task();
+        task.setName(taskName.getText());
+        task.setMasterDirPath(masterDirPath.getText());
+        task.setBackupDirPath(backupDirPath.getText());
+
+        // TODO wrap..?
+        EntityManager em = EntityManagerFactoryProvider.getFactory().createEntityManager();
+        em.getTransaction().begin();
+        new JpaTaskRepository(em).add(task);
+        em.getTransaction().commit();
+
 		WindowEventListeners.INSTANCE.notify(WindowEvents.ON_CLOSE_TASK_FORM);
 	}
 
