@@ -9,5 +9,6 @@ package sk44.mirroringtool;
  * @author sk
  */
 public interface WindowEventListener {
-	void handleEvent();
+
+    void handleEvent();
 }

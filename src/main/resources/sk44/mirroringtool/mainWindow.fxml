@@ -14,21 +14,27 @@
       <children>
         <Button mnemonicParsing="false" onAction="#handleNewTaskAction" text="New Task">
           <HBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
           </HBox.margin>
         </Button>
+        <Button mnemonicParsing="false" onAction="#handleEditTaskAction" text="Edit">
+          <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </HBox.margin>
+        </Button>
+        <Button mnemonicParsing="false" onAction="#handleDeleteTaskAction" text="Delete" HBox.margin="$x1" />
       </children>
     </HBox>
     <SplitPane dividerPositions="0.4959349593495935" focusTraversable="true" orientation="VERTICAL" prefHeight="371.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
       <items>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
           <children>
-            <TableView prefHeight="174.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TableView fx:id="taskTableView" prefHeight="174.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columns>
                 <TableColumn prefWidth="75.0" text="Active" />
-                <TableColumn editable="false" prefWidth="75.0" sortable="false" text="Title" />
-                <TableColumn editable="false" prefWidth="75.0" text="Master" />
-                <TableColumn editable="false" prefWidth="75.0" text="Backup" />
+                <TableColumn editable="false" prefWidth="75.0" sortable="false" text="Title" fx:id="taskNameColumn" />
+                <TableColumn editable="false" prefWidth="75.0" text="Master" fx:id="taskMasterDirPathColumn" />
+                <TableColumn editable="false" prefWidth="75.0" text="Backup" fx:id="taskBackupDirPathColumn" />
                 <TableColumn editable="false" prefWidth="75.0" text="Last Executed" />
                 <TableColumn editable="false" prefWidth="75.0" text="Result" />
               </columns>

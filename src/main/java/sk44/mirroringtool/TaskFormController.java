@@ -80,12 +80,12 @@ public class TaskFormController implements Initializable {
         new JpaTaskRepository(em).add(task);
         em.getTransaction().commit();
 
-		WindowEventListeners.INSTANCE.notify(WindowEvents.ON_CLOSE_TASK_FORM);
+		WindowEventListeners.INSTANCE.notify(WindowEvents.ON_SAVE_TASK_FORM);
 	}
 
 	@FXML
 	protected void handleCancelAction(ActionEvent event) {
-		WindowEventListeners.INSTANCE.notify(WindowEvents.ON_CLOSE_TASK_FORM);
+		WindowEventListeners.INSTANCE.notify(WindowEvents.ON_SAVE_TASK_FORM);
 	}
 
 	/**

@@ -12,52 +12,51 @@ import javax.persistence.Id;
 
 /**
  * Task entity.
- * 
+ *
  * @author sk
  */
 @Entity
 public class Task {
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Column(nullable = false, length = 50)
-	private String name;
-	@Column(nullable = false, length = 300)
-	private String masterDirPath;
-	@Column(nullable = false, length = 300)
-	private String backupDirPath;
+    private Long id;
+    @Column(nullable = false, length = 50)
+    private String name;
+    @Column(nullable = false, length = 300)
+    private String masterDirPath;
+    @Column(nullable = false, length = 300)
+    private String backupDirPath;
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getMasterDirPath() {
-		return masterDirPath;
-	}
+    public String getMasterDirPath() {
+        return masterDirPath;
+    }
 
-	public void setMasterDirPath(String masterDirPath) {
-		this.masterDirPath = masterDirPath;
-	}
+    public void setMasterDirPath(String masterDirPath) {
+        this.masterDirPath = masterDirPath;
+    }
 
-	public String getBackupDirPath() {
-		return backupDirPath;
-	}
+    public String getBackupDirPath() {
+        return backupDirPath;
+    }
 
-	public void setBackupDirPath(String backupDirPath) {
-		this.backupDirPath = backupDirPath;
-	}
-	
+    public void setBackupDirPath(String backupDirPath) {
+        this.backupDirPath = backupDirPath;
+    }
 }

@@ -8,6 +8,7 @@ package sk44.mirroringtool;
  *
  * @author sk
  */
- enum WindowEvents {
-	ON_OPEN_TASK_FORM, ON_CLOSE_TASK_FORM
+enum WindowEvents {
+
+    ON_OPEN_TASK_FORM, ON_SAVE_TASK_FORM, ON_CANCEL_TASK_FORM;
 }
