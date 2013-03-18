@@ -4,6 +4,7 @@ package sk44.mirroringtool.infrastructure.persistence.jpa;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import sk44.mirroringtool.domain.Task;
 import sk44.mirroringtool.domain.TaskRepository;
 
@@ -27,6 +28,18 @@ public class JpaTaskRepository implements TaskRepository {
     @Override
     public void add(Task task) {
         em.persist(task);
+    }
+
+    @Override
+    public void merge(Task task) {
+        em.merge(task);
+    }
+
+    @Override
+    public Task matches(Long id) {
+        Query q = em.createQuery("SELECT t FROM Task t WHERE t.id = :id", Task.class);
+        List<Task> founds = q.setParameter("id", id).getResultList();
+        return founds.get(0);
     }
 
     @Override

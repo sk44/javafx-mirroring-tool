@@ -24,52 +24,52 @@ import sk44.mirroringtool.infrastructure.persistence.jpa.JpaTaskRepository;
  */
 public class TaskFormController implements Initializable {
 
-	interface ChosenDirectoryHandler {
-		void handleDir(File dir);
-	}
+    interface ChosenDirectoryHandler {
 
-	@FXML
-	private TextField taskName;
-	@FXML
-	private TextField masterDirPath;
-	@FXML
-	private TextField backupDirPath;
+        void handleDir(File dir);
+    }
+    private Task task;
+    @FXML
+    private TextField taskName;
+    @FXML
+    private TextField masterDirPath;
+    @FXML
+    private TextField backupDirPath;
 
-	@FXML
-	protected void handleBrowseMasterDir(ActionEvent event) {
-		openDirectoryChooser("Choose Master Dir...", new ChosenDirectoryHandler() {
-			@Override
-			public void handleDir(File dir) {
-				masterDirPath.setText(dir.getAbsolutePath());
-			}
-		});
-	}
+    @FXML
+    protected void handleBrowseMasterDir(ActionEvent event) {
+        openDirectoryChooser("Choose Master Dir...", new ChosenDirectoryHandler() {
+            @Override
+            public void handleDir(File dir) {
+                masterDirPath.setText(dir.getAbsolutePath());
+            }
+        });
+    }
 
-	@FXML
-	protected void handleBrowseBackupDir(ActionEvent event) {
-		openDirectoryChooser("Choose Backup Dir...", new ChosenDirectoryHandler() {
-			@Override
-			public void handleDir(File dir) {
-				backupDirPath.setText(dir.getAbsolutePath());
-			}
-		});
-	}
+    @FXML
+    protected void handleBrowseBackupDir(ActionEvent event) {
+        openDirectoryChooser("Choose Backup Dir...", new ChosenDirectoryHandler() {
+            @Override
+            public void handleDir(File dir) {
+                backupDirPath.setText(dir.getAbsolutePath());
+            }
+        });
+    }
 
-	private void openDirectoryChooser(String title, ChosenDirectoryHandler handler) {
-		DirectoryChooser dc = new DirectoryChooser();
-		dc.setTitle(title);
-		// TODO set arg
-		File dir = dc.showDialog(null);
-		if (dir != null) {
-			handler.handleDir(dir);
-		}
-	}
+    private void openDirectoryChooser(String title, ChosenDirectoryHandler handler) {
+        DirectoryChooser dc = new DirectoryChooser();
+        dc.setTitle(title);
+        // TODO set arg
+        File dir = dc.showDialog(null);
+        if (dir != null) {
+            handler.handleDir(dir);
+        }
+    }
 
-	@FXML
-	protected void handleOKAction(ActionEvent event) {
+    @FXML
+    protected void handleOKAction(ActionEvent event) {
 
         // TODO validate
-        Task task = new Task();
         task.setName(taskName.getText());
         task.setMasterDirPath(masterDirPath.getText());
         task.setBackupDirPath(backupDirPath.getText());
@@ -77,22 +77,30 @@ public class TaskFormController implements Initializable {
         // TODO wrap..?
         EntityManager em = EntityManagerFactoryProvider.getFactory().createEntityManager();
         em.getTransaction().begin();
-        new JpaTaskRepository(em).add(task);
+        new JpaTaskRepository(em).merge(task);
         em.getTransaction().commit();
 
-		WindowEventListeners.INSTANCE.notify(WindowEvents.ON_SAVE_TASK_FORM);
-	}
+        WindowEventListeners.INSTANCE.notify(WindowEvents.ON_SAVE_TASK_FORM);
+    }
 
-	@FXML
-	protected void handleCancelAction(ActionEvent event) {
-		WindowEventListeners.INSTANCE.notify(WindowEvents.ON_SAVE_TASK_FORM);
-	}
+    @FXML
+    protected void handleCancelAction(ActionEvent event) {
+        WindowEventListeners.INSTANCE.notify(WindowEvents.ON_SAVE_TASK_FORM);
+    }
 
-	/**
-	 * Initializes the controller class.
-	 */
-	@Override
-	public void initialize(URL url, ResourceBundle rb) {
-		// TODO
-	}	
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        Long passedTaskId = PassedParameters.INSTANCE.getTaskIdAndClear();
+        if (passedTaskId == null) {
+            task = new Task();
+        } else {
+            task = new JpaTaskRepository().matches(passedTaskId);
+            backupDirPath.textProperty().set(task.getBackupDirPath());
+            masterDirPath.textProperty().set(task.getMasterDirPath());
+            taskName.textProperty().set(task.getName());
+        }
+    }
 }

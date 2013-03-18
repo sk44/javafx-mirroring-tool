@@ -21,7 +21,7 @@ import javafx.stage.WindowEvent;
  * @author sk
  */
 public class Main extends Application {
-    
+
     private Stage primaryStage;
     private Stage formStage;
 
@@ -31,13 +31,13 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
     @Override
     public void start(Stage stage) throws Exception {
-        
+
         primaryStage = stage;
         initListeners();
-        
+
         stage.setTitle("Mirroring Tool");
         Scene scene = new Scene(loadPaneFromFXML("mainWindow.fxml"));
         stage.setScene(scene);
@@ -49,18 +49,18 @@ public class Main extends Application {
             }
         });
     }
-    
+
     @Override
     public void stop() throws Exception {
         System.out.println("application will terminate...");
         super.stop();
     }
-    
+
     void initListeners() {
         // TODO サブウィンドウのイベント通知方法を検討
         WindowEventListeners listeners = WindowEventListeners.INSTANCE;
         listeners.addListener(WindowEvents.ON_OPEN_TASK_FORM,
-                new WindowEventListener() {
+            new WindowEventListener() {
             @Override
             public void handleEvent() {
                 showTaskForm();
@@ -79,22 +79,22 @@ public class Main extends Application {
             }
         });
     }
-    
+
     void showTaskForm() {
         formStage = new Stage();
         formStage.initStyle(StageStyle.UTILITY);
-        formStage.setTitle("New Task");
+        formStage.setTitle(PassedParameters.INSTANCE.hasTaskId() ? "Edit Task" : "New Task");
         formStage.initModality(Modality.APPLICATION_MODAL);
         formStage.initOwner(primaryStage);
         Scene scene = new Scene(loadPaneFromFXML("taskForm.fxml"));
         formStage.setScene(scene);
         formStage.show();
     }
-    
+
     void closeTaskForm() {
         formStage.close();
     }
-    
+
     private Pane loadPaneFromFXML(String fxmlPath) {
         try {
             return (Pane) FXMLLoader.load(getClass().getResource(fxmlPath));

@@ -41,9 +41,11 @@ public class MainWindowController implements Initializable {
     @FXML
     protected void handleEditTaskAction(ActionEvent event) {
         Task task = taskTableView.getSelectionModel().getSelectedItem();
-        if (task != null) {
-            System.out.println(task.getId());
+        if (task == null) {
+            return;
         }
+        PassedParameters.INSTANCE.setTaskId(task.getId());
+        WindowEventListeners.INSTANCE.notify(WindowEvents.ON_OPEN_TASK_FORM);
     }
 
     @FXML

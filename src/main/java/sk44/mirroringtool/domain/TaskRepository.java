@@ -11,5 +11,9 @@ public interface TaskRepository {
 
     void add(Task task);
 
+    void merge(Task task);
+
+    Task matches(Long id);
+
     List<Task> all();
 }
