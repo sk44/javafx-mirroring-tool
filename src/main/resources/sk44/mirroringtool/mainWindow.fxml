@@ -10,8 +10,19 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml" fx:controller="sk44.mirroringtool.MainWindowController">
   <children>
-    <HBox alignment="TOP_RIGHT" prefHeight="29.0" prefWidth="598.0" AnchorPane.bottomAnchor="371.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0">
+    <HBox prefHeight="29.0" prefWidth="598.0" AnchorPane.bottomAnchor="371.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0">
       <children>
+        <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleExecuteTaskAction" text="Execute">
+          <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </HBox.margin>
+        </Button>
+        <Button mnemonicParsing="false" onAction="#handleTestTaskAction" text="Test" HBox.margin="$x1" />
+        <Separator orientation="VERTICAL" prefHeight="200.0">
+          <HBox.margin>
+            <Insets left="5.0" right="5.0" />
+          </HBox.margin>
+        </Separator>
         <Button mnemonicParsing="false" onAction="#handleNewTaskAction" text="New Task">
           <HBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
@@ -22,7 +33,11 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
           </HBox.margin>
         </Button>
-        <Button mnemonicParsing="false" onAction="#handleDeleteTaskAction" text="Delete" HBox.margin="$x1" />
+        <Button mnemonicParsing="false" onAction="#handleDeleteTaskAction" text="Delete">
+          <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </HBox.margin>
+        </Button>
       </children>
     </HBox>
     <SplitPane dividerPositions="0.4959349593495935" focusTraversable="true" orientation="VERTICAL" prefHeight="371.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">

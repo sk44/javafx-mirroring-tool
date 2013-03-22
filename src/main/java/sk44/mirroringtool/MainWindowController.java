@@ -35,6 +35,16 @@ public class MainWindowController implements Initializable {
     TableColumn<Task, String> taskBackupDirPathColumn;
 
     @FXML
+    protected void handleExecuteTaskAction(ActionEvent event) {
+        // TODO
+    }
+
+    @FXML
+    protected void handleTestTaskAction(ActionEvent event) {
+        // TODO
+    }
+
+    @FXML
     protected void handleNewTaskAction(ActionEvent event) {
         WindowEventListeners.INSTANCE.notify(WindowEvents.ON_OPEN_TASK_FORM);
     }
