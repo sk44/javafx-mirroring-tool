@@ -13,6 +13,8 @@ public interface TaskRepository {
 
     void merge(Task task);
 
+    void remove(Task task);
+
     Task matches(Long id);
 
     List<Task> all();

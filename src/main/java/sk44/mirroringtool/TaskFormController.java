@@ -12,10 +12,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
-import javax.persistence.EntityManager;
+import sk44.mirroringtool.application.TaskService;
 import sk44.mirroringtool.domain.Task;
-import sk44.mirroringtool.infrastructure.persistence.jpa.EntityManagerFactoryProvider;
-import sk44.mirroringtool.infrastructure.persistence.jpa.JpaTaskRepository;
 
 /**
  * FXML Controller class
@@ -74,11 +72,7 @@ public class TaskFormController implements Initializable {
         task.setMasterDirPath(masterDirPath.getText());
         task.setBackupDirPath(backupDirPath.getText());
 
-        // TODO wrap..?
-        EntityManager em = EntityManagerFactoryProvider.getFactory().createEntityManager();
-        em.getTransaction().begin();
-        new JpaTaskRepository(em).merge(task);
-        em.getTransaction().commit();
+        new TaskService().merge(task);
 
         WindowEventListeners.INSTANCE.notify(WindowEvents.ON_SAVE_TASK_FORM);
     }
@@ -97,7 +91,7 @@ public class TaskFormController implements Initializable {
         if (passedTaskId == null) {
             task = new Task();
         } else {
-            task = new JpaTaskRepository().matches(passedTaskId);
+            task = new TaskService().findBy(passedTaskId);
             backupDirPath.textProperty().set(task.getBackupDirPath());
             masterDirPath.textProperty().set(task.getMasterDirPath());
             taskName.textProperty().set(task.getName());

@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import sk44.mirroringtool.application.TaskService;
 import sk44.mirroringtool.domain.Task;
 import sk44.mirroringtool.domain.TaskRepository;
 import sk44.mirroringtool.infrastructure.persistence.jpa.JpaTaskRepository;
@@ -50,7 +51,12 @@ public class MainWindowController implements Initializable {
 
     @FXML
     protected void handleDeleteTaskAction(ActionEvent event) {
-        // TODO
+        Task task = taskTableView.getSelectionModel().getSelectedItem();
+        if (task == null) {
+            return;
+        }
+        new TaskService().delete(task);
+        refreshTaskTable();
     }
 
     /**
