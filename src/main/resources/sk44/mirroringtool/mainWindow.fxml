@@ -58,12 +58,12 @@
         </AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="190.0" prefWidth="598.0">
           <children>
-            <TableView prefHeight="180.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TableView fx:id="taskProcessingDetailsTableView" prefHeight="180.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="Process" />
-                <TableColumn prefWidth="75.0" text="File" />
-                <TableColumn prefWidth="75.0" text="Master" />
-                <TableColumn prefWidth="75.0" text="Backup" />
+                <TableColumn prefWidth="75.0" text="Description" fx:id="processingDescriptionColumn" />
+                <TableColumn prefWidth="75.0" text="Path" fx:id="processingPathColumn" />
+                <TableColumn prefWidth="75.0" text="Master" fx:id="processingMasterLastUpdatedColumn" />
+                <TableColumn prefWidth="75.0" text="Backup" fx:id="processingBackupLastUpdatedColumn" />
               </columns>
             </TableView>
           </children>
