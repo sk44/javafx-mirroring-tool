@@ -75,6 +75,11 @@ public class MainWindowController implements Initializable {
     }
 
     @FXML
+    protected void handleClearResultsAction(ActionEvent event) {
+        taskProcessingDetailsTableView.getItems().clear();
+    }
+
+    @FXML
     protected void handleNewTaskAction(ActionEvent event) {
         WindowEventListeners.INSTANCE.notify(WindowEvents.ON_OPEN_TASK_FORM);
     }
@@ -116,6 +121,7 @@ public class MainWindowController implements Initializable {
         refreshTaskTable();
 
         // initialize processing table.
+        taskProcessingDetailsTableView.getItems().clear();
         processingDescriptionColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskProcessingDetail, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<TaskProcessingDetail, String> p) {
@@ -142,9 +148,9 @@ public class MainWindowController implements Initializable {
     }
 
     private void addDetailToProcessingTable(TaskProcessingDetail detail) {
-        ObservableList<TaskProcessingDetail> items = taskProcessingDetailsTableView.getItems();
+        final ObservableList<TaskProcessingDetail> items = taskProcessingDetailsTableView.getItems();
         items.add(detail);
-        // TODO スクロールバーが表示されていないときに呼ぶと表示がおかしくなる？
+        // TODO 初回実行時に中身が空っぽになる
 //        taskProcessingDetailsTableView.scrollTo(items.size() - 1);
     }
 }
