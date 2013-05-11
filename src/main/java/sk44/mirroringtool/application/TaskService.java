@@ -2,12 +2,10 @@
  */
 package sk44.mirroringtool.application;
 
-import javax.persistence.EntityManager;
 import sk44.mirroringtool.domain.Task;
 import sk44.mirroringtool.domain.TaskProcessingDetail;
 import sk44.mirroringtool.domain.TaskProcessingType;
-import sk44.mirroringtool.infrastructure.persistence.jpa.EntityManagerFactoryProvider;
-import sk44.mirroringtool.infrastructure.persistence.jpa.JpaTaskRepository;
+import sk44.mirroringtool.infrastructure.persistence.jpa.RepositoriesContext;
 import sk44.mirroringtool.util.Action;
 
 /**
@@ -18,21 +16,30 @@ import sk44.mirroringtool.util.Action;
 public class TaskService {
 
     public Task findBy(Long taskId) {
-        return new JpaTaskRepository().matches(taskId);
+        try (RepositoriesContext context = new RepositoriesContext()) {
+            return context.createTaskRepository().matches(taskId);
+        } catch (Exception e) {
+            // AutoCloseable は検査例外をスローするので、 catch するしかない・・・
+            throw new RuntimeException(e);
+        }
     }
 
     public void merge(Task task) {
-        EntityManager em = EntityManagerFactoryProvider.getFactory().createEntityManager();
-        em.getTransaction().begin();
-        new JpaTaskRepository(em).merge(task);
-        em.getTransaction().commit();
+        try (RepositoriesContext context = new RepositoriesContext()) {
+            context.createTaskRepository().merge(task);
+            context.saveChanges();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void delete(Task task) {
-        EntityManager em = EntityManagerFactoryProvider.getFactory().createEntityManager();
-        em.getTransaction().begin();
-        new JpaTaskRepository(em).remove(task);
-        em.getTransaction().commit();
+        try (RepositoriesContext context = new RepositoriesContext()) {
+            context.createTaskRepository().remove(task);
+            context.saveChanges();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void execute(Long taskId) {

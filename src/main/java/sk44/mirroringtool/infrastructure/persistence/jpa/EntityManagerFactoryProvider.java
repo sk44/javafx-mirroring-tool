@@ -9,13 +9,13 @@ import javax.persistence.Persistence;
  *
  * @author sk
  */
-public class EntityManagerFactoryProvider {
+class EntityManagerFactoryProvider {
 
     private static EntityManagerFactory factory;
 
     static {
         try {
-            factory = Persistence.createEntityManagerFactory("mirroring-toolPU"); 
+            factory = Persistence.createEntityManagerFactory("mirroring-toolPU");
         } catch (ExceptionInInitializerError e) {
             // TODO handle...
             throw e;
