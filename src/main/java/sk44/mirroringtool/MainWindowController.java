@@ -112,23 +112,8 @@ public class MainWindowController implements Initializable {
 
         taskService = new TaskService();
 
-        // initialize task table.
-        // TODO プロパティ名書く以外にやり方ない？
-        taskNameColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("name"));
-        taskMasterDirPathColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("masterDirPath"));
-        taskBackupDirPathColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("backupDirPath"));
-
-        refreshTaskTable();
-
-        // initialize processing table.
-        taskProcessingDetailsTableView.getItems().clear();
-        processingDescriptionColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskProcessingDetail, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<TaskProcessingDetail, String> p) {
-                return new SimpleStringProperty(p.getValue().getProcessType().getDescription());
-            }
-        });
-        // TODO
+        initializeTasks();
+        initializeTaskProcessingDetails();
 
         WindowEventListeners.INSTANCE.addListener(WindowEvents.ON_SAVE_TASK_FORM, new WindowEventListener() {
             @Override
@@ -136,6 +121,38 @@ public class MainWindowController implements Initializable {
                 refreshTaskTable();
             }
         });
+    }
+
+    private void initializeTasks() {
+        // TODO プロパティ名書く以外にやり方ない？
+        taskNameColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("name"));
+        taskMasterDirPathColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("masterDirPath"));
+        taskBackupDirPathColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("backupDirPath"));
+        refreshTaskTable();
+    }
+
+    private void initializeTaskProcessingDetails() {
+        taskProcessingDetailsTableView.getItems().clear();
+        processingDescriptionColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskProcessingDetail, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<TaskProcessingDetail, String> p) {
+                return new SimpleStringProperty(p.getValue().getProcessType().getDescription());
+            }
+        });
+        processingPathColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskProcessingDetail, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<TaskProcessingDetail, String> p) {
+                return new SimpleStringProperty(p.getValue().getPath().toString());
+            }
+        });
+        processingMasterLastUpdatedColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskProcessingDetail, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<TaskProcessingDetail, String> p) {
+                // TODO format
+                return new SimpleStringProperty(p.getValue().getMasterLastUpdated().toString());
+            }
+        });
+        // TODO 残りの列の初期化
     }
 
     private void refreshTaskTable() {

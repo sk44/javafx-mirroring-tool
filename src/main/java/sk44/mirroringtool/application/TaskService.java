@@ -4,7 +4,7 @@ package sk44.mirroringtool.application;
 
 import sk44.mirroringtool.domain.Task;
 import sk44.mirroringtool.domain.TaskProcessingDetail;
-import sk44.mirroringtool.domain.TaskProcessingType;
+import sk44.mirroringtool.domain.TaskRepository;
 import sk44.mirroringtool.infrastructure.persistence.jpa.RepositoriesContext;
 import sk44.mirroringtool.util.Action;
 
@@ -51,10 +51,16 @@ public class TaskService {
     }
 
     public void test(Long taskId, Action<TaskProcessingDetail> processingDetailsHandler) {
-        // TODO
-        for (int i = 0; i < 10; i++) {
-            System.out.println(i);
-            processingDetailsHandler.execute(new TaskProcessingDetail(i % 3 == 0 ? TaskProcessingType.CREATE : TaskProcessingType.UPDATE, null, null, null));
+        try (RepositoriesContext context = new RepositoriesContext()) {
+            TaskRepository repos = context.createTaskRepository();
+            Task task = repos.matches(taskId);
+            if (task == null) {
+                // TODO
+                return;
+            }
+            task.test(processingDetailsHandler);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
