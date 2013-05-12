@@ -17,6 +17,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
+import org.joda.time.DateTime;
 import sk44.mirroringtool.application.TaskService;
 import sk44.mirroringtool.domain.Task;
 import sk44.mirroringtool.domain.TaskProcessingDetail;
@@ -142,14 +143,18 @@ public class MainWindowController implements Initializable {
         processingPathColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskProcessingDetail, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<TaskProcessingDetail, String> p) {
-                return new SimpleStringProperty(p.getValue().getPath().toString());
+                return new SimpleStringProperty(p.getValue().getMasterFilePath().toString());
             }
         });
         processingMasterLastUpdatedColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskProcessingDetail, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<TaskProcessingDetail, String> p) {
+                DateTime lastModified = p.getValue().getMasterLastUpdated();
+                if (lastModified == null) {
+                    return new SimpleStringProperty("");
+                }
                 // TODO format
-                return new SimpleStringProperty(p.getValue().getMasterLastUpdated().toString());
+                return new SimpleStringProperty(lastModified.toString());
             }
         });
         // TODO 残りの列の初期化
