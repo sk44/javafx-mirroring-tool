@@ -51,6 +51,7 @@ public class Task {
         FileVisitor<Path> visitor = new TaskFileVisitor(masterPath, backupPath, test, handler);
         try {
             Files.walkFileTree(masterPath, visitor);
+            // TODO 削除処理
         } catch (IOException ex) {
             // TODO notify error
             logger.error(ex.getMessage(), ex);

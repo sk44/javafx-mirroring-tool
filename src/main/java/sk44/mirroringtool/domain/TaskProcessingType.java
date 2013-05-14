@@ -4,7 +4,12 @@
  */
 package sk44.mirroringtool.domain;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Backup task processing type.
@@ -19,8 +24,12 @@ public enum TaskProcessingType {
     COPY("copy") {
         @Override
         public void execute(Path masterFilePath, Path backupFilePath) {
-            // TODO
-            System.out.println("copy " + masterFilePath.toString() + " to " + backupFilePath.toString());
+            try {
+                Files.copy(masterFilePath, backupFilePath, StandardCopyOption.COPY_ATTRIBUTES);
+                logger.info("copy " + masterFilePath.toString() + " to " + backupFilePath.toString());
+            } catch (IOException ex) {
+                logger.error(ex.getMessage(), ex);
+            }
         }
     },
     /**
@@ -29,8 +38,14 @@ public enum TaskProcessingType {
     UPDATE("update") {
         @Override
         public void execute(Path masterFilePath, Path backupFilePath) {
-            // TODO
-            System.out.println("update " + masterFilePath.toString() + " to " + backupFilePath.toString());
+            try {
+                Files.copy(masterFilePath, backupFilePath,
+                    StandardCopyOption.COPY_ATTRIBUTES,
+                    StandardCopyOption.REPLACE_EXISTING);
+                logger.info("update " + masterFilePath.toString() + " to " + backupFilePath.toString());
+            } catch (IOException ex) {
+                logger.error(ex.getMessage(), ex);
+            }
         }
     },
     /**
@@ -39,8 +54,12 @@ public enum TaskProcessingType {
     DELETE("delete") {
         @Override
         public void execute(Path masterFilePath, Path backupFilePath) {
-            // TODO
-            System.out.println("delete file: " + backupFilePath.toString());
+            try {
+                Files.delete(backupFilePath);
+                logger.info("delete file: " + backupFilePath.toString());
+            } catch (IOException ex) {
+                logger.error(ex.getMessage(), ex);
+            }
         }
     },
     /**
@@ -52,6 +71,7 @@ public enum TaskProcessingType {
             // no-op
         }
     };
+    private static final Logger logger = LoggerFactory.getLogger(TaskProcessingType.class);
     private final String description;
 
     private TaskProcessingType(String description) {
