@@ -14,6 +14,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * JavaFX entry point.
@@ -22,6 +24,7 @@ import javafx.stage.WindowEvent;
  */
 public class Main extends Application {
 
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private Stage primaryStage;
     private Stage formStage;
 
@@ -29,7 +32,12 @@ public class Main extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        launch(args);
+        logger.info("application will start.");
+        try {
+            launch(args);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     @Override
@@ -45,14 +53,14 @@ public class Main extends Application {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent t) {
-                System.out.println("stage will close...");
+                logger.info("stage will close.");
             }
         });
     }
 
     @Override
     public void stop() throws Exception {
-        System.out.println("application will terminate...");
+        logger.info("application will terminate.");
         super.stop();
     }
 

@@ -9,13 +9,13 @@ import java.io.IOException;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sk44.mirroringtool.util.Action;
 
 /**
@@ -26,6 +26,7 @@ import sk44.mirroringtool.util.Action;
 @Entity
 public class Task {
 
+    private static final Logger logger = LoggerFactory.getLogger(Task.class);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,15 +37,23 @@ public class Task {
     @Column(nullable = false, length = 300)
     private String backupDirPath;
 
+    public void execute(Action<TaskProcessingDetail> handler) {
+        execute(false, handler);
+    }
+
     public void test(Action<TaskProcessingDetail> handler) {
+        execute(true, handler);
+    }
+
+    private void execute(boolean test, Action<TaskProcessingDetail> handler) {
         Path masterPath = new File(masterDirPath).toPath();
         Path backupPath = new File(backupDirPath).toPath();
-        FileVisitor<Path> visitor = new TaskFileVisitor(masterPath, backupPath, handler);
+        FileVisitor<Path> visitor = new TaskFileVisitor(masterPath, backupPath, test, handler);
         try {
             Files.walkFileTree(masterPath, visitor);
         } catch (IOException ex) {
-            // TODO
-            Logger.getLogger(Task.class.getName()).log(Level.SEVERE, null, ex);
+            // TODO notify error
+            logger.error(ex.getMessage(), ex);
         }
     }
 

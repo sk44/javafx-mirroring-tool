@@ -2,6 +2,8 @@
  */
 package sk44.mirroringtool.application;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sk44.mirroringtool.domain.Task;
 import sk44.mirroringtool.domain.TaskProcessingDetail;
 import sk44.mirroringtool.domain.TaskRepository;
@@ -15,12 +17,11 @@ import sk44.mirroringtool.util.Action;
  */
 public class TaskService {
 
+    private static final Logger logger = LoggerFactory.getLogger(TaskService.class);
+
     public Task findBy(Long taskId) {
         try (RepositoriesContext context = new RepositoriesContext()) {
             return context.createTaskRepository().matches(taskId);
-        } catch (Exception e) {
-            // AutoCloseable は検査例外をスローするので、 catch するしかない・・・
-            throw new RuntimeException(e);
         }
     }
 
@@ -28,8 +29,6 @@ public class TaskService {
         try (RepositoriesContext context = new RepositoriesContext()) {
             context.createTaskRepository().merge(task);
             context.saveChanges();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -37,13 +36,19 @@ public class TaskService {
         try (RepositoriesContext context = new RepositoriesContext()) {
             context.createTaskRepository().remove(task);
             context.saveChanges();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
-    public void execute(Long taskId) {
-        // TODO
+    public void execute(Long taskId, Action<TaskProcessingDetail> processingDetailsHandler) {
+        try (RepositoriesContext context = new RepositoriesContext()) {
+            TaskRepository repos = context.createTaskRepository();
+            Task task = repos.matches(taskId);
+            if (task == null) {
+                logger.warn("task [" + taskId + "] is not found.");
+                return;
+            }
+            task.execute(processingDetailsHandler);
+        }
     }
 
     public void executeAll() {
@@ -55,12 +60,10 @@ public class TaskService {
             TaskRepository repos = context.createTaskRepository();
             Task task = repos.matches(taskId);
             if (task == null) {
-                // TODO
+                logger.warn("task [" + taskId + "] is not found.");
                 return;
             }
             task.test(processingDetailsHandler);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 }

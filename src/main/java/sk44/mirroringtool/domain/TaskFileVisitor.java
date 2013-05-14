@@ -17,15 +17,16 @@ import sk44.mirroringtool.util.Action;
  * @author sk
  */
 public class TaskFileVisitor extends SimpleFileVisitor<Path> {
-    // TODO
 
     private final Path masterDirPath;
     private final Path backupDirPath;
+    private final boolean test;
     private final Action<TaskProcessingDetail> visitFileNotifier;
 
-    public TaskFileVisitor(Path masterDirPath, Path backupDirPath, Action<TaskProcessingDetail> visitFileNotifier) {
+    public TaskFileVisitor(Path masterDirPath, Path backupDirPath, boolean test, Action<TaskProcessingDetail> visitFileNotifier) {
         this.masterDirPath = masterDirPath;
         this.backupDirPath = backupDirPath;
+        this.test = test;
         this.visitFileNotifier = visitFileNotifier;
     }
 
@@ -36,7 +37,9 @@ public class TaskFileVisitor extends SimpleFileVisitor<Path> {
 
         Path backupFilePath = this.backupDirPath.resolve(this.masterDirPath.relativize(file));
         TaskProcessingDetail detail = TaskProcessingDetail.createProcessingDetailOf(file, backupFilePath);
-        detail.execute();
+        if (test == false) {
+            detail.execute();
+        }
         visitFileNotifier.execute(detail);
         return FileVisitResult.CONTINUE;
     }

@@ -58,7 +58,12 @@ public class MainWindowController implements Initializable {
         if (task == null) {
             return;
         }
-        taskService.execute(task.getId());
+        taskService.execute(task.getId(), new Action<TaskProcessingDetail>() {
+            @Override
+            public void execute(TaskProcessingDetail obj) {
+                addDetailToProcessingTable(obj);
+            }
+        });
     }
 
     @FXML
