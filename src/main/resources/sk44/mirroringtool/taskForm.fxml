@@ -8,9 +8,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="145.0" prefWidth="523.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml" fx:controller="sk44.mirroringtool.TaskFormController">
+<AnchorPane id="AnchorPane" prefHeight="212.0" prefWidth="523.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml" fx:controller="sk44.mirroringtool.TaskFormController">
   <children>
-    <GridPane prefHeight="106.0" prefWidth="392.0" styleClass="grid" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <GridPane prefHeight="146.0" prefWidth="523.0" styleClass="grid" AnchorPane.bottomAnchor="66.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefWidth="92.0" text="Name" GridPane.columnIndex="0" GridPane.rowIndex="0">
           <GridPane.margin>
@@ -40,7 +40,7 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       </rowConstraints>
     </GridPane>
-    <HBox alignment="BOTTOM_RIGHT" prefHeight="36.0" prefWidth="392.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="106.0">
+    <HBox alignment="BOTTOM_RIGHT" minHeight="36.0" prefHeight="43.0" prefWidth="523.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="169.0">
       <children>
         <Button mnemonicParsing="false" onAction="#handleOKAction" text="OK">
           <HBox.margin>
@@ -55,6 +55,6 @@
     </HBox>
   </children>
   <stylesheets>
-    <URL value="@taskForm.css" />
+    <URL value="@style.css" />
   </stylesheets>
 </AnchorPane>

@@ -8,9 +8,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml" fx:controller="sk44.mirroringtool.MainWindowController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" styleClass="mainFxmlClass, container" xmlns:fx="http://javafx.com/fxml" fx:controller="sk44.mirroringtool.MainWindowController">
   <children>
-    <HBox prefHeight="29.0" prefWidth="598.0" AnchorPane.bottomAnchor="371.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0">
+    <HBox prefHeight="315.0" prefWidth="798.0" AnchorPane.bottomAnchor="285.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0">
       <children>
         <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleExecuteTaskAction" text="Execute">
           <HBox.margin>
@@ -44,31 +44,34 @@
           </HBox.margin>
         </Button>
       </children>
+      <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+      </padding>
     </HBox>
-    <SplitPane dividerPositions="0.4959349593495935" focusTraversable="true" orientation="VERTICAL" prefHeight="371.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
+    <SplitPane dividerPositions="0.4927797833935018" focusTraversable="true" orientation="VERTICAL" prefHeight="361.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="44.0">
       <items>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
           <children>
             <TableView fx:id="taskTableView" prefHeight="174.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columns>
                 <TableColumn prefWidth="75.0" text="Active" />
-                <TableColumn editable="false" prefWidth="75.0" sortable="false" text="Title" fx:id="taskNameColumn" />
-                <TableColumn editable="false" prefWidth="75.0" text="Master" fx:id="taskMasterDirPathColumn" />
-                <TableColumn editable="false" prefWidth="75.0" text="Backup" fx:id="taskBackupDirPathColumn" />
-                <TableColumn editable="false" prefWidth="75.0" text="Last Executed" />
+                <TableColumn editable="false" prefWidth="100.0" sortable="false" text="Title" fx:id="taskNameColumn" />
+                <TableColumn editable="false" prefWidth="200.0" text="Master" fx:id="taskMasterDirPathColumn" />
+                <TableColumn editable="false" prefWidth="200.0" text="Backup" fx:id="taskBackupDirPathColumn" />
+                <TableColumn editable="false" prefWidth="100.0" text="Last Executed" />
                 <TableColumn editable="false" prefWidth="75.0" text="Result" />
               </columns>
             </TableView>
           </children>
         </AnchorPane>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="190.0" prefWidth="598.0">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="190.0" prefWidth="598.0" styleClass="container">
           <children>
             <TableView fx:id="taskProcessingDetailsTableView" prefHeight="180.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="Description" fx:id="processingDescriptionColumn" />
-                <TableColumn prefWidth="75.0" text="Path" fx:id="processingPathColumn" />
-                <TableColumn prefWidth="75.0" text="Master" fx:id="processingMasterLastUpdatedColumn" />
-                <TableColumn prefWidth="75.0" text="Backup" fx:id="processingBackupLastUpdatedColumn" />
+                <TableColumn prefWidth="100.0" text="Description" fx:id="processingDescriptionColumn" />
+                <TableColumn prefWidth="450.0" text="Path" fx:id="processingPathColumn" />
+                <TableColumn prefWidth="100.0" text="Master" fx:id="processingMasterLastUpdatedColumn" />
+                <TableColumn prefWidth="100.0" text="Backup" fx:id="processingBackupLastUpdatedColumn" />
               </columns>
             </TableView>
           </children>
@@ -77,6 +80,6 @@
     </SplitPane>
   </children>
   <stylesheets>
-    <URL value="@mainWindow.css" />
+    <URL value="@style.css" />
   </stylesheets>
 </AnchorPane>

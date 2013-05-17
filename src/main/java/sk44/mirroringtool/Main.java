@@ -47,6 +47,7 @@ public class Main extends Application {
         initListeners();
 
         stage.setTitle("Mirroring Tool");
+//        stage.initStyle(StageStyle.TRANSPARENT);
         Scene scene = new Scene(loadPaneFromFXML("mainWindow.fxml"));
         stage.setScene(scene);
         stage.show();
@@ -68,7 +69,7 @@ public class Main extends Application {
         // TODO サブウィンドウのイベント通知方法を検討
         WindowEventListeners listeners = WindowEventListeners.INSTANCE;
         listeners.addListener(WindowEvents.ON_OPEN_TASK_FORM,
-            new WindowEventListener() {
+                new WindowEventListener() {
             @Override
             public void handleEvent() {
                 showTaskForm();
