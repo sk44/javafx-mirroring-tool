@@ -23,15 +23,27 @@ public class TaskProcessingDetail {
         DateTime masterLastModified = lastModifiedOf(masterFilePath);
         DateTime backupLastModified = lastModifiedOf(backupFilePath);
 
+        // マスター起点なので削除はない
         TaskProcessingType processingType;
-        if (Files.exists(masterFilePath) == false) {
-            processingType = TaskProcessingType.DELETE;
-        } else if (Files.exists(backupFilePath) == false) {
+        if (Files.exists(backupFilePath) == false) {
             processingType = TaskProcessingType.COPY;
         } else {
             processingType = isMasterUpdated(masterLastModified, backupLastModified)
                 ? TaskProcessingType.UPDATE : TaskProcessingType.SKIP;
         }
+        return new TaskProcessingDetail(processingType, masterFilePath, backupFilePath, masterLastModified, backupLastModified);
+    }
+
+    static TaskProcessingDetail createDeleteDetailOf(Path masterFilePath, Path backupFilePath) throws IOException {
+        DateTime masterLastModified = lastModifiedOf(masterFilePath);
+        DateTime backupLastModified = lastModifiedOf(backupFilePath);
+        TaskProcessingType processingType;
+        if (Files.exists(masterFilePath) == false) {
+            processingType = TaskProcessingType.DELETE;
+        } else {
+            processingType = TaskProcessingType.SKIP;
+        }
+
         return new TaskProcessingDetail(processingType, masterFilePath, backupFilePath, masterLastModified, backupLastModified);
     }
 

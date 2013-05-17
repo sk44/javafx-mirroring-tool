@@ -49,9 +49,10 @@ public class Task {
         Path masterPath = new File(masterDirPath).toPath();
         Path backupPath = new File(backupDirPath).toPath();
         FileVisitor<Path> visitor = new TaskFileVisitor(masterPath, backupPath, test, handler);
+        FileVisitor<Path> cleanVisitor = new CleanFileVisitor(masterPath, backupPath, test, handler);
         try {
             Files.walkFileTree(masterPath, visitor);
-            // TODO 削除処理
+            Files.walkFileTree(backupPath, cleanVisitor);
         } catch (IOException ex) {
             // TODO notify error
             logger.error(ex.getMessage(), ex);
