@@ -39,7 +39,7 @@ public class TaskService {
         }
     }
 
-    public void execute(Long taskId, Action<TaskProcessingDetail> processingDetailsHandler) {
+    public void execute(Long taskId, Action<TaskProcessingDetail> processingDetailsHandler, Action<Void> callback) {
         try (RepositoriesContext context = new RepositoriesContext()) {
             TaskRepository repos = context.createTaskRepository();
             Task task = repos.matches(taskId);
@@ -48,7 +48,10 @@ public class TaskService {
                 return;
             }
             task.execute(processingDetailsHandler);
+            context.saveChanges();
         }
+        // TODO null 渡すのがアレ
+        callback.execute(null);
     }
 
     public void executeAll() {

@@ -1,5 +1,6 @@
 apply plugin: 'java'
-apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/javafx.plugin'
+//apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/javafx.plugin'
+apply from: 'https://repository-javafx-gradle-plugin.forge.cloudbees.com/release/javafx.plugin'
 
 defaultTasks 'clean', 'assemble'
 

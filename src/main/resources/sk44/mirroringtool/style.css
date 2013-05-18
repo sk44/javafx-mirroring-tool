@@ -15,13 +15,14 @@
 }
 
 .button {
-    -fx-border-color: #333333;
+    -fx-border-color: #dc143c;
+    -fx-text-fill: #dc143c;
     -fx-border-width: 2px;
     -fx-background-color: transparent;
 }
 
 .button:hover {
-    -fx-background-color: #666666;
+    -fx-background-color: #dc143c;
     -fx-text-fill: #ffffff;
 }
 
@@ -32,7 +33,8 @@
 }
 .table-view .column-header-background {
     -fx-background-color: transparent;
-    -fx-border-color: transparent transparent rgba(0, 0, 0, 0.3) transparent;
+    /*    -fx-border-color: transparent transparent rgba(0, 0, 0, 0.3) transparent;*/
+    -fx-border-color: transparent transparent #dc143c transparent;
     -fx-border-width: 2px;
     -fx-background-insets: 0;
     -fx-padding: 0 10 0 0;
@@ -45,6 +47,7 @@
 .table-view .column-header .label {
     -fx-font-weight: bold;
     -fx-alignment: center-left;
+    /*    -fx-text-fill: #dc143c;*/
 }
 
 .table-view .table-cell {
@@ -53,6 +56,7 @@
 }
 
 .table-view:focused .table-row-cell:filled:focused:selected {
-    -fx-background-color: -fx-focus-color;
+    /*    -fx-background-color: -fx-focus-color;*/
+    -fx-background-color: #dc143c;
 }
 

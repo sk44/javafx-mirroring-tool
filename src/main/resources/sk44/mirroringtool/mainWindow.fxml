@@ -8,7 +8,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" styleClass="mainFxmlClass, container" xmlns:fx="http://javafx.com/fxml" fx:controller="sk44.mirroringtool.MainWindowController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="960.0" styleClass="mainFxmlClass, container" xmlns:fx="http://javafx.com/fxml" fx:controller="sk44.mirroringtool.MainWindowController">
   <children>
     <HBox prefHeight="315.0" prefWidth="798.0" AnchorPane.bottomAnchor="285.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0">
       <children>
@@ -58,7 +58,7 @@
                 <TableColumn editable="false" prefWidth="100.0" sortable="false" text="Title" fx:id="taskNameColumn" />
                 <TableColumn editable="false" prefWidth="200.0" text="Master" fx:id="taskMasterDirPathColumn" />
                 <TableColumn editable="false" prefWidth="200.0" text="Backup" fx:id="taskBackupDirPathColumn" />
-                <TableColumn editable="false" prefWidth="100.0" text="Last Executed" />
+                <TableColumn editable="false" prefWidth="150.0" text="Last Executed" fx:id="taskLastExecutedColumn" />
                 <TableColumn editable="false" prefWidth="75.0" text="Result" />
               </columns>
             </TableView>
@@ -68,10 +68,10 @@
           <children>
             <TableView fx:id="taskProcessingDetailsTableView" prefHeight="180.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columns>
-                <TableColumn prefWidth="100.0" text="Description" fx:id="processingDescriptionColumn" />
+                <TableColumn prefWidth="100.0" text="Process" fx:id="processingDescriptionColumn" />
                 <TableColumn prefWidth="450.0" text="Path" fx:id="processingPathColumn" />
-                <TableColumn prefWidth="100.0" text="Master" fx:id="processingMasterLastUpdatedColumn" />
-                <TableColumn prefWidth="100.0" text="Backup" fx:id="processingBackupLastUpdatedColumn" />
+                <TableColumn prefWidth="180.0" text="Master Last Modified" fx:id="processingMasterLastUpdatedColumn" />
+                <TableColumn prefWidth="180.0" text="Backup Last Modified" fx:id="processingBackupLastUpdatedColumn" />
               </columns>
             </TableView>
           </children>

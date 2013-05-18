@@ -5,6 +5,7 @@
 package sk44.mirroringtool;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,7 +16,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import org.joda.time.DateTime;
 import sk44.mirroringtool.application.TaskService;
@@ -32,6 +32,9 @@ import sk44.mirroringtool.util.Action;
  */
 public class MainWindowController implements Initializable {
 
+    private static final String DATE_FORMAT_FOR_LAST_MODIFIED = "yyyy-MM-dd HH:mm:ss:SSS";
+    private static final String DATE_FORMAT_FOR_LAST_EXECUTED = "yyyy-MM-dd HH:mm:ss";
+    private static final String DATE_VALUE_FOR_NULL = "--";
     private TaskService taskService;
     @FXML
     TableView<Task> taskTableView;
@@ -41,6 +44,8 @@ public class MainWindowController implements Initializable {
     TableColumn<Task, String> taskMasterDirPathColumn;
     @FXML
     TableColumn<Task, String> taskBackupDirPathColumn;
+    @FXML
+    TableColumn<Task, String> taskLastExecutedColumn;
     @FXML
     TableView<TaskProcessingDetail> taskProcessingDetailsTableView;
     @FXML
@@ -62,6 +67,11 @@ public class MainWindowController implements Initializable {
             @Override
             public void execute(TaskProcessingDetail obj) {
                 addDetailToProcessingTable(obj);
+            }
+        }, new Action<Void>() {
+            @Override
+            public void execute(Void obj) {
+                refreshTaskTable();
             }
         });
     }
@@ -130,10 +140,36 @@ public class MainWindowController implements Initializable {
     }
 
     private void initializeTasks() {
-        // TODO プロパティ名書く以外にやり方ない？
-        taskNameColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("name"));
-        taskMasterDirPathColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("masterDirPath"));
-        taskBackupDirPathColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("backupDirPath"));
+        taskNameColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Task, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Task, String> p) {
+                return new SimpleStringProperty(p.getValue().getName());
+            }
+        });
+        taskMasterDirPathColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Task, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Task, String> p) {
+                return new SimpleStringProperty(p.getValue().getMasterDirPath());
+            }
+        });
+        taskBackupDirPathColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Task, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Task, String> p) {
+                return new SimpleStringProperty(p.getValue().getBackupDirPath());
+            }
+        });
+        taskLastExecutedColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Task, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Task, String> p) {
+                Date lastExecuted = p.getValue().getLastExecuted();
+                if (lastExecuted == null) {
+                    return new SimpleStringProperty(DATE_VALUE_FOR_NULL);
+                }
+                return new SimpleStringProperty(new DateTime(lastExecuted).toString(DATE_FORMAT_FOR_LAST_EXECUTED));
+            }
+        });
+        // TODO 残りの列
+
         refreshTaskTable();
     }
 
@@ -156,10 +192,19 @@ public class MainWindowController implements Initializable {
             public ObservableValue<String> call(TableColumn.CellDataFeatures<TaskProcessingDetail, String> p) {
                 DateTime lastModified = p.getValue().getMasterLastUpdated();
                 if (lastModified == null) {
-                    return new SimpleStringProperty("");
+                    return new SimpleStringProperty(DATE_VALUE_FOR_NULL);
                 }
-                // TODO format
-                return new SimpleStringProperty(lastModified.toString());
+                return new SimpleStringProperty(lastModified.toString(DATE_FORMAT_FOR_LAST_MODIFIED));
+            }
+        });
+        processingBackupLastUpdatedColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskProcessingDetail, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<TaskProcessingDetail, String> p) {
+                DateTime lastModified = p.getValue().getBackupLastUpdated();
+                if (lastModified == null) {
+                    return new SimpleStringProperty(DATE_VALUE_FOR_NULL);
+                }
+                return new SimpleStringProperty(lastModified.toString(DATE_FORMAT_FOR_LAST_MODIFIED));
             }
         });
         // TODO 残りの列の初期化

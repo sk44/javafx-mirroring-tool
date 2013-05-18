@@ -9,11 +9,14 @@ import java.io.IOException;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sk44.mirroringtool.util.Action;
@@ -36,9 +39,13 @@ public class Task {
     private String masterDirPath;
     @Column(nullable = false, length = 300)
     private String backupDirPath;
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastExecuted;
 
     public void execute(Action<TaskProcessingDetail> handler) {
         execute(false, handler);
+        lastExecuted = new Date();
     }
 
     public void test(Action<TaskProcessingDetail> handler) {
@@ -89,5 +96,13 @@ public class Task {
 
     public void setBackupDirPath(String backupDirPath) {
         this.backupDirPath = backupDirPath;
+    }
+
+    public Date getLastExecuted() {
+        return lastExecuted;
+    }
+
+    public void setLastExecuted(Date lastExecuted) {
+        this.lastExecuted = lastExecuted;
     }
 }
