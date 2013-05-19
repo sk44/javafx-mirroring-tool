@@ -37,8 +37,9 @@ public class CleanFileVisitor extends SimpleFileVisitor<Path> {
         if (test == false) {
             detail.execute();
         }
-        // TODO skip は表示しなくていい
-        visitFileNotifier.execute(detail);
+        if (detail.getProcessType() != TaskProcessingType.SKIP) {
+            visitFileNotifier.execute(detail);
+        }
         return FileVisitResult.CONTINUE;
     }
 }

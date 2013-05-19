@@ -17,11 +17,11 @@
             <Insets />
           </GridPane.margin>
         </Label>
-        <TextField fx:id="masterDirPath" minHeight="18.0" prefHeight="18.0" prefWidth="183.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <TextField fx:id="masterDirPath" minHeight="18.0" prefHeight="22.0" prefWidth="183.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefWidth="92.0" text="Master Dir" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <TextField id="name" fx:id="taskName" minHeight="18.0" prefHeight="18.0" prefWidth="182.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <TextField id="name" fx:id="taskName" minHeight="18.0" prefHeight="22.0" prefWidth="304.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefWidth="92.0" text="Backup Dir" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <TextField fx:id="backupDirPath" minHeight="18.0" prefHeight="18.0" prefWidth="261.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <TextField fx:id="backupDirPath" minHeight="18.0" prefHeight="22.0" prefWidth="261.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Button mnemonicParsing="false" onAction="#handleBrowseMasterDir" text="Browse..." GridPane.columnIndex="2" GridPane.rowIndex="1">
           <GridPane.margin>
             <Insets left="5.0" fx:id="x1" />
