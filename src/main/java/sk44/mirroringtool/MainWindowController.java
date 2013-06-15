@@ -8,8 +8,10 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,6 +37,7 @@ public class MainWindowController implements Initializable {
     private static final String DATE_FORMAT_FOR_LAST_MODIFIED = "yyyy-MM-dd HH:mm:ss:SSS";
     private static final String DATE_FORMAT_FOR_LAST_EXECUTED = "yyyy-MM-dd HH:mm:ss";
     private static final String DATE_VALUE_FOR_NULL = "--";
+    private ObservableList<TaskProcessingDetail> taskResults = FXCollections.observableArrayList();
     private TaskService taskService;
     @FXML
     TableView<Task> taskTableView;
@@ -63,6 +66,7 @@ public class MainWindowController implements Initializable {
         if (task == null) {
             return;
         }
+        // TODO in background
         taskService.execute(task.getId(), new Action<TaskProcessingDetail>() {
             @Override
             public void execute(TaskProcessingDetail obj) {
@@ -78,16 +82,38 @@ public class MainWindowController implements Initializable {
 
     @FXML
     protected void handleTestTaskAction(ActionEvent event) {
-        Task task = taskTableView.getSelectionModel().getSelectedItem();
+        final Task task = taskTableView.getSelectionModel().getSelectedItem();
         if (task == null) {
             return;
         }
-        taskService.test(task.getId(), new Action<TaskProcessingDetail>() {
+        javafx.concurrent.Task<Void> t = new javafx.concurrent.Task<Void>() {
             @Override
-            public void execute(TaskProcessingDetail obj) {
-                addDetailToProcessingTable(obj);
+            protected Void call() throws Exception {
+                taskService.execute(task.getId(), new Action<TaskProcessingDetail>() {
+                    @Override
+                    public void execute(final TaskProcessingDetail obj) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                addDetailToProcessingTable(obj);
+                            }
+                        });
+                    }
+                }, new Action<Void>() {
+                    @Override
+                    public void execute(Void obj) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                refreshTaskTable();
+                            }
+                        });
+                    }
+                });
+                return null;
             }
-        });
+        };
+        new Thread(t).start();
     }
 
     @FXML
@@ -130,6 +156,7 @@ public class MainWindowController implements Initializable {
 
         initializeTasks();
         initializeTaskProcessingDetails();
+        taskProcessingDetailsTableView.setItems(taskResults);
 
         WindowEventListeners.INSTANCE.addListener(WindowEvents.ON_SAVE_TASK_FORM, new WindowEventListener() {
             @Override
@@ -220,9 +247,9 @@ public class MainWindowController implements Initializable {
     }
 
     private void addDetailToProcessingTable(TaskProcessingDetail detail) {
-        final ObservableList<TaskProcessingDetail> items = taskProcessingDetailsTableView.getItems();
-        items.add(detail);
-        // TODO 初回実行時に中身が空っぽになる
-//        taskProcessingDetailsTableView.scrollTo(items.size() - 1);
+//        final ObservableList<TaskProcessingDetail> items = taskProcessingDetailsTableView.getItems();
+//        items.add(detail);
+        taskResults.add(detail);
+        taskProcessingDetailsTableView.scrollTo(taskResults.size() - 1);
     }
 }
