@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Date;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -42,6 +43,13 @@ public class Task {
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastExecuted;
+    @Column
+    @Convert(converter = ActiveTypeConverter.class)
+    private ActiveType activeType;
+
+    public Task() {
+        activeType = ActiveType.ACTIVE;
+    }
 
     public void execute(Action<TaskProcessingDetail> handler) {
         execute(false, handler);
@@ -104,5 +112,13 @@ public class Task {
 
     public void setLastExecuted(Date lastExecuted) {
         this.lastExecuted = lastExecuted;
+    }
+
+    public ActiveType getActiveType() {
+        return activeType;
+    }
+
+    public void setActiveType(ActiveType activeType) {
+        this.activeType = activeType;
     }
 }
