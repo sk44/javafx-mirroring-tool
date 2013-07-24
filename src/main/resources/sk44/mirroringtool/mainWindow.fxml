@@ -12,13 +12,13 @@
   <children>
     <HBox prefHeight="315.0" prefWidth="798.0" AnchorPane.bottomAnchor="285.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0">
       <children>
-        <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleExecuteTaskAction" text="Execute">
+        <Button fx:id="buttonExecute" alignment="CENTER" mnemonicParsing="false" onAction="#handleExecuteTaskAction" text="Execute">
           <HBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
           </HBox.margin>
         </Button>
-        <Button mnemonicParsing="false" onAction="#handleTestTaskAction" text="Test" HBox.margin="$x1" />
-        <Button mnemonicParsing="false" onAction="#handleClearResultsAction" text="Clear Results">
+        <Button fx:id="buttonTest" mnemonicParsing="false" onAction="#handleTestTaskAction" text="Test" HBox.margin="$x1" />
+        <Button fx:id="buttonClearResults" mnemonicParsing="false" onAction="#handleClearResultsAction" text="Clear Results">
           <HBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
           </HBox.margin>
@@ -28,17 +28,17 @@
             <Insets left="5.0" right="5.0" />
           </HBox.margin>
         </Separator>
-        <Button mnemonicParsing="false" onAction="#handleNewTaskAction" text="New Task">
+        <Button fx:id="buttonNewTask" mnemonicParsing="false" onAction="#handleNewTaskAction" text="New Task">
           <HBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
           </HBox.margin>
         </Button>
-        <Button mnemonicParsing="false" onAction="#handleEditTaskAction" text="Edit">
+        <Button fx:id="buttonEdit" mnemonicParsing="false" onAction="#handleEditTaskAction" text="Edit">
           <HBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
           </HBox.margin>
         </Button>
-        <Button mnemonicParsing="false" onAction="#handleDeleteTaskAction" text="Delete">
+        <Button fx:id="buttonDelete" mnemonicParsing="false" onAction="#handleDeleteTaskAction" text="Delete">
           <HBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
           </HBox.margin>

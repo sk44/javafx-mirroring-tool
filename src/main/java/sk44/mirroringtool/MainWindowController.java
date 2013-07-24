@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +18,7 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
@@ -40,6 +42,19 @@ public class MainWindowController implements Initializable {
     private static final String DATE_VALUE_FOR_NULL = "--";
     private ObservableList<TaskProcessingDetail> taskResults = FXCollections.observableArrayList();
     private TaskService taskService;
+    private MainWindowViewModel viewModel;
+    @FXML
+    Button buttonExecute;
+    @FXML
+    Button buttonTest;
+    @FXML
+    Button buttonClearResults;
+    @FXML
+    Button buttonNewTask;
+    @FXML
+    Button buttonEdit;
+    @FXML
+    Button buttonDelete;
     @FXML
     TableView<MirroringTask> taskTableView;
     @FXML
@@ -70,18 +85,23 @@ public class MainWindowController implements Initializable {
         Task<Void> t = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                taskService.execute(task.getId(), new Action<TaskProcessingDetail>() {
-                    @Override
-                    public void execute(TaskProcessingDetail obj) {
-                        addDetailToProcessingTable(obj);
-                    }
-                }, new Action<Void>() {
-                    @Override
-                    public void execute(Void obj) {
-                        refreshTaskTable();
-                    }
-                });
-                return null;
+                try {
+                    viewModel.executingProperty().set(true);
+                    taskService.execute(task.getId(), new Action<TaskProcessingDetail>() {
+                        @Override
+                        public void execute(TaskProcessingDetail obj) {
+                            addDetailToProcessingTable(obj);
+                        }
+                    }, new Action<Void>() {
+                        @Override
+                        public void execute(Void obj) {
+                            refreshTaskTable();
+                        }
+                    });
+                    return null;
+                } finally {
+                    viewModel.executingProperty().set(false);
+                }
             }
         };
         new Thread(t).start();
@@ -96,28 +116,33 @@ public class MainWindowController implements Initializable {
         Task<Void> t = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                taskService.execute(task.getId(), new Action<TaskProcessingDetail>() {
-                    @Override
-                    public void execute(final TaskProcessingDetail obj) {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                addDetailToProcessingTable(obj);
-                            }
-                        });
-                    }
-                }, new Action<Void>() {
-                    @Override
-                    public void execute(Void obj) {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                refreshTaskTable();
-                            }
-                        });
-                    }
-                });
-                return null;
+                try {
+                    viewModel.executingProperty().set(true);
+                    taskService.execute(task.getId(), new Action<TaskProcessingDetail>() {
+                        @Override
+                        public void execute(final TaskProcessingDetail obj) {
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    addDetailToProcessingTable(obj);
+                                }
+                            });
+                        }
+                    }, new Action<Void>() {
+                        @Override
+                        public void execute(Void obj) {
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    refreshTaskTable();
+                                }
+                            });
+                        }
+                    });
+                    return null;
+                } finally {
+                    viewModel.executingProperty().set(false);
+                }
             }
         };
         new Thread(t).start();
@@ -159,11 +184,26 @@ public class MainWindowController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        viewModel = new MainWindowViewModel();
         taskService = new TaskService();
 
         initializeTasks();
         initializeTaskProcessingDetails();
         taskProcessingDetailsTableView.setItems(taskResults);
+        buttonExecute.disableProperty().bind(viewModel.executingProperty().or(viewModel.selectedProperty().not()));
+        buttonTest.disableProperty().bind(viewModel.executingProperty().or(viewModel.selectedProperty().not()));
+
+        buttonClearResults.disableProperty().bind(viewModel.executingProperty());
+        buttonNewTask.disableProperty().bind(viewModel.executingProperty());
+        buttonEdit.disableProperty().bind(viewModel.executingProperty().or(viewModel.selectedProperty().not()));
+        buttonDelete.disableProperty().bind(viewModel.executingProperty().or(viewModel.selectedProperty().not()));
+
+        taskTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MirroringTask>() {
+            @Override
+            public void changed(ObservableValue<? extends MirroringTask> ov, MirroringTask t, MirroringTask t1) {
+                viewModel.selectedProperty().set(true);
+            }
+        });
 
         WindowEventListeners.INSTANCE.addListener(WindowEvents.ON_SAVE_TASK_FORM, new WindowEventListener() {
             @Override
