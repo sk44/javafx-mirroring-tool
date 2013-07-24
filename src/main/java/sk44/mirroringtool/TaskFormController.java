@@ -13,7 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import sk44.mirroringtool.application.TaskService;
-import sk44.mirroringtool.domain.Task;
+import sk44.mirroringtool.domain.MirroringTask;
 
 /**
  * FXML Controller class
@@ -26,7 +26,7 @@ public class TaskFormController implements Initializable {
 
         void handleDir(File dir);
     }
-    private Task task;
+    private MirroringTask task;
     @FXML
     private TextField taskName;
     @FXML
@@ -89,7 +89,7 @@ public class TaskFormController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         Long passedTaskId = PassedParameters.INSTANCE.getTaskIdAndClear();
         if (passedTaskId == null) {
-            task = new Task();
+            task = new MirroringTask();
         } else {
             task = new TaskService().findBy(passedTaskId);
             backupDirPath.textProperty().set(task.getBackupDirPath());

@@ -3,19 +3,19 @@ package sk44.mirroringtool.domain;
 import java.util.List;
 
 /**
- * Task repository.
+ * MirroringTask repository.
  *
  * @author sk
  */
-public interface TaskRepository {
+public interface MirroringTaskRepository {
 
-    void add(Task task);
+    void add(MirroringTask task);
 
-    void merge(Task task);
+    void merge(MirroringTask task);
 
-    void remove(Task task);
+    void remove(MirroringTask task);
 
-    Task matches(Long id);
+    MirroringTask matches(Long id);
 
-    List<Task> all();
+    List<MirroringTask> all();
 }

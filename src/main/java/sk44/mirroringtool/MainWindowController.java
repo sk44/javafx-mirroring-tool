@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,9 +22,9 @@ import javafx.scene.control.TableView;
 import javafx.util.Callback;
 import org.joda.time.DateTime;
 import sk44.mirroringtool.application.TaskService;
-import sk44.mirroringtool.domain.Task;
+import sk44.mirroringtool.domain.MirroringTask;
+import sk44.mirroringtool.domain.MirroringTaskRepository;
 import sk44.mirroringtool.domain.TaskProcessingDetail;
-import sk44.mirroringtool.domain.TaskRepository;
 import sk44.mirroringtool.infrastructure.persistence.jpa.JpaTaskRepository;
 import sk44.mirroringtool.util.Action;
 
@@ -40,15 +41,15 @@ public class MainWindowController implements Initializable {
     private ObservableList<TaskProcessingDetail> taskResults = FXCollections.observableArrayList();
     private TaskService taskService;
     @FXML
-    TableView<Task> taskTableView;
+    TableView<MirroringTask> taskTableView;
     @FXML
-    TableColumn<Task, String> taskNameColumn;
+    TableColumn<MirroringTask, String> taskNameColumn;
     @FXML
-    TableColumn<Task, String> taskMasterDirPathColumn;
+    TableColumn<MirroringTask, String> taskMasterDirPathColumn;
     @FXML
-    TableColumn<Task, String> taskBackupDirPathColumn;
+    TableColumn<MirroringTask, String> taskBackupDirPathColumn;
     @FXML
-    TableColumn<Task, String> taskLastExecutedColumn;
+    TableColumn<MirroringTask, String> taskLastExecutedColumn;
     @FXML
     TableView<TaskProcessingDetail> taskProcessingDetailsTableView;
     @FXML
@@ -62,31 +63,37 @@ public class MainWindowController implements Initializable {
 
     @FXML
     protected void handleExecuteTaskAction(ActionEvent event) {
-        Task task = taskTableView.getSelectionModel().getSelectedItem();
+        final MirroringTask task = taskTableView.getSelectionModel().getSelectedItem();
         if (task == null) {
             return;
         }
-        // TODO in background
-        taskService.execute(task.getId(), new Action<TaskProcessingDetail>() {
+        Task<Void> t = new Task<Void>() {
             @Override
-            public void execute(TaskProcessingDetail obj) {
-                addDetailToProcessingTable(obj);
+            protected Void call() throws Exception {
+                taskService.execute(task.getId(), new Action<TaskProcessingDetail>() {
+                    @Override
+                    public void execute(TaskProcessingDetail obj) {
+                        addDetailToProcessingTable(obj);
+                    }
+                }, new Action<Void>() {
+                    @Override
+                    public void execute(Void obj) {
+                        refreshTaskTable();
+                    }
+                });
+                return null;
             }
-        }, new Action<Void>() {
-            @Override
-            public void execute(Void obj) {
-                refreshTaskTable();
-            }
-        });
+        };
+        new Thread(t).start();
     }
 
     @FXML
     protected void handleTestTaskAction(ActionEvent event) {
-        final Task task = taskTableView.getSelectionModel().getSelectedItem();
+        final MirroringTask task = taskTableView.getSelectionModel().getSelectedItem();
         if (task == null) {
             return;
         }
-        javafx.concurrent.Task<Void> t = new javafx.concurrent.Task<Void>() {
+        Task<Void> t = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 taskService.execute(task.getId(), new Action<TaskProcessingDetail>() {
@@ -128,7 +135,7 @@ public class MainWindowController implements Initializable {
 
     @FXML
     protected void handleEditTaskAction(ActionEvent event) {
-        Task task = taskTableView.getSelectionModel().getSelectedItem();
+        MirroringTask task = taskTableView.getSelectionModel().getSelectedItem();
         if (task == null) {
             return;
         }
@@ -138,7 +145,7 @@ public class MainWindowController implements Initializable {
 
     @FXML
     protected void handleDeleteTaskAction(ActionEvent event) {
-        Task task = taskTableView.getSelectionModel().getSelectedItem();
+        MirroringTask task = taskTableView.getSelectionModel().getSelectedItem();
         if (task == null) {
             return;
         }
@@ -167,27 +174,27 @@ public class MainWindowController implements Initializable {
     }
 
     private void initializeTasks() {
-        taskNameColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Task, String>, ObservableValue<String>>() {
+        taskNameColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MirroringTask, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Task, String> p) {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<MirroringTask, String> p) {
                 return new SimpleStringProperty(p.getValue().getName());
             }
         });
-        taskMasterDirPathColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Task, String>, ObservableValue<String>>() {
+        taskMasterDirPathColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MirroringTask, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Task, String> p) {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<MirroringTask, String> p) {
                 return new SimpleStringProperty(p.getValue().getMasterDirPath());
             }
         });
-        taskBackupDirPathColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Task, String>, ObservableValue<String>>() {
+        taskBackupDirPathColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MirroringTask, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Task, String> p) {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<MirroringTask, String> p) {
                 return new SimpleStringProperty(p.getValue().getBackupDirPath());
             }
         });
-        taskLastExecutedColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Task, String>, ObservableValue<String>>() {
+        taskLastExecutedColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MirroringTask, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Task, String> p) {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<MirroringTask, String> p) {
                 Date lastExecuted = p.getValue().getLastExecuted();
                 if (lastExecuted == null) {
                     return new SimpleStringProperty(DATE_VALUE_FOR_NULL);
@@ -238,10 +245,10 @@ public class MainWindowController implements Initializable {
     }
 
     private void refreshTaskTable() {
-        List<Task> items = taskTableView.getItems();
+        List<MirroringTask> items = taskTableView.getItems();
         items.removeAll(items);
-        TaskRepository repos = new JpaTaskRepository();
-        for (Task task : repos.all()) {
+        MirroringTaskRepository repos = new JpaTaskRepository();
+        for (MirroringTask task : repos.all()) {
             items.add(task);
         }
     }

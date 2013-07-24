@@ -5,50 +5,52 @@ package sk44.mirroringtool.infrastructure.persistence.jpa;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import sk44.mirroringtool.domain.Task;
-import sk44.mirroringtool.domain.TaskRepository;
+import sk44.mirroringtool.domain.MirroringTask;
+import sk44.mirroringtool.domain.MirroringTaskRepository;
 
 /**
- * Task repository implementation with JPA.
+ * MirroringTask repository implementation with JPA.
  *
  * @author sk
  */
-public class JpaTaskRepository implements TaskRepository {
-    
+public class JpaTaskRepository implements MirroringTaskRepository {
+
     private final EntityManager em;
-    
+
     public JpaTaskRepository(EntityManager em) {
         this.em = em;
     }
-    
+
     public JpaTaskRepository() {
         this(EntityManagerFactoryProvider.getFactory().createEntityManager());
     }
-    
+
     @Override
-    public void add(Task task) {
+    public void add(MirroringTask task) {
         em.persist(task);
     }
-    
+
     @Override
-    public void merge(Task task) {
+    public void merge(MirroringTask task) {
         em.merge(task);
     }
-    
+
     @Override
-    public void remove(Task task) {
+    public void remove(MirroringTask task) {
         em.remove(matches(task.getId()));
     }
-    
+
     @Override
-    public Task matches(Long id) {
-        TypedQuery<Task> q = em.createQuery("SELECT t FROM Task t WHERE t.id = :id", Task.class);
-        List<Task> founds = q.setParameter("id", id).getResultList();
+    public MirroringTask matches(Long id) {
+        TypedQuery<MirroringTask> q = em.createQuery(
+            "SELECT t FROM MirroringTask t WHERE t.id = :id",
+            MirroringTask.class);
+        List<MirroringTask> founds = q.setParameter("id", id).getResultList();
         return founds.get(0);
     }
-    
+
     @Override
-    public List<Task> all() {
-        return em.createQuery("select t from Task t", Task.class).getResultList();
+    public List<MirroringTask> all() {
+        return em.createQuery("select t from MirroringTask t", MirroringTask.class).getResultList();
     }
 }

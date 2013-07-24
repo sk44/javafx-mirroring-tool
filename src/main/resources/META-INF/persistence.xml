@@ -2,7 +2,7 @@
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
     <persistence-unit name="mirroring-toolPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <class>sk44.mirroringtool.domain.Task</class>
+        <class>sk44.mirroringtool.domain.MirroringTask</class>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:derby:mtdb;create=true"/>
             <property name="javax.persistence.jdbc.password" value=""/>
@@ -11,7 +11,7 @@
             <property name="eclipselink.logging.file" value="el.log"/>
             <property name="eclipselink.logging.level" value="FINE"/>
             <property name="eclipselink.logging.parameters" value="true"/>
-            <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+            <property name="eclipselink.ddl-generation" value="create-tables"/>
         </properties>
         <mapping-file>META-INF/orm.xml</mapping-file>
     </persistence-unit>

@@ -23,14 +23,14 @@ import org.slf4j.LoggerFactory;
 import sk44.mirroringtool.util.Action;
 
 /**
- * Task entity.
+ * Mirroring task entity.
  *
  * @author sk
  */
 @Entity
-public class Task {
+public class MirroringTask {
 
-    private static final Logger logger = LoggerFactory.getLogger(Task.class);
+    private static final Logger logger = LoggerFactory.getLogger(MirroringTask.class);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -47,7 +47,7 @@ public class Task {
     @Convert(converter = ActiveTypeConverter.class)
     private ActiveType activeType;
 
-    public Task() {
+    public MirroringTask() {
         activeType = ActiveType.ACTIVE;
     }
 

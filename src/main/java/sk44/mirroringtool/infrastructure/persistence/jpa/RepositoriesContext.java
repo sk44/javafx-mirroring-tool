@@ -7,7 +7,7 @@ package sk44.mirroringtool.infrastructure.persistence.jpa;
 import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sk44.mirroringtool.domain.TaskRepository;
+import sk44.mirroringtool.domain.MirroringTaskRepository;
 
 /**
  * Providing repositories and managing connections.
@@ -40,7 +40,7 @@ public class RepositoriesContext implements AutoCloseable {
         logger.info("transaction rollback succeeded.");
     }
 
-    public TaskRepository createTaskRepository() {
+    public MirroringTaskRepository createTaskRepository() {
         return new JpaTaskRepository(em);
     }
 
