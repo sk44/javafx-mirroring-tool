@@ -40,9 +40,10 @@ public class MainWindowController implements Initializable {
     private static final String DATE_FORMAT_FOR_LAST_MODIFIED = "yyyy-MM-dd HH:mm:ss:SSS";
     private static final String DATE_FORMAT_FOR_LAST_EXECUTED = "yyyy-MM-dd HH:mm:ss";
     private static final String DATE_VALUE_FOR_NULL = "--";
-    private ObservableList<TaskProcessingDetail> taskResults = FXCollections.observableArrayList();
+    private final ObservableList<TaskProcessingDetail> taskResults = FXCollections.observableArrayList();
     private TaskService taskService;
     private MainWindowViewModel viewModel;
+    // buttons ----------
     @FXML
     Button buttonExecute;
     @FXML
@@ -55,6 +56,7 @@ public class MainWindowController implements Initializable {
     Button buttonEdit;
     @FXML
     Button buttonDelete;
+    // task table ----------
     @FXML
     TableView<MirroringTask> taskTableView;
     @FXML
@@ -65,6 +67,9 @@ public class MainWindowController implements Initializable {
     TableColumn<MirroringTask, String> taskBackupDirPathColumn;
     @FXML
     TableColumn<MirroringTask, String> taskLastExecutedColumn;
+    @FXML
+    TableColumn<MirroringTask, String> taskResultColumn;
+    // result table ----------
     @FXML
     TableView<TaskProcessingDetail> taskProcessingDetailsTableView;
     @FXML
@@ -82,29 +87,7 @@ public class MainWindowController implements Initializable {
         if (task == null) {
             return;
         }
-        Task<Void> t = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                try {
-                    viewModel.executingProperty().set(true);
-                    taskService.execute(task.getId(), new Action<TaskProcessingDetail>() {
-                        @Override
-                        public void execute(TaskProcessingDetail obj) {
-                            addDetailToProcessingTable(obj);
-                        }
-                    }, new Action<Void>() {
-                        @Override
-                        public void execute(Void obj) {
-                            refreshTaskTable();
-                        }
-                    });
-                    return null;
-                } finally {
-                    viewModel.executingProperty().set(false);
-                }
-            }
-        };
-        new Thread(t).start();
+        new Thread(createTask(task.getId(), false)).start();
     }
 
     @FXML
@@ -113,39 +96,7 @@ public class MainWindowController implements Initializable {
         if (task == null) {
             return;
         }
-        Task<Void> t = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                try {
-                    viewModel.executingProperty().set(true);
-                    taskService.execute(task.getId(), new Action<TaskProcessingDetail>() {
-                        @Override
-                        public void execute(final TaskProcessingDetail obj) {
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    addDetailToProcessingTable(obj);
-                                }
-                            });
-                        }
-                    }, new Action<Void>() {
-                        @Override
-                        public void execute(Void obj) {
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    refreshTaskTable();
-                                }
-                            });
-                        }
-                    });
-                    return null;
-                } finally {
-                    viewModel.executingProperty().set(false);
-                }
-            }
-        };
-        new Thread(t).start();
+        new Thread(createTask(task.getId(), true)).start();
     }
 
     @FXML
@@ -294,9 +245,54 @@ public class MainWindowController implements Initializable {
     }
 
     private void addDetailToProcessingTable(TaskProcessingDetail detail) {
-//        final ObservableList<TaskProcessingDetail> items = taskProcessingDetailsTableView.getItems();
-//        items.add(detail);
         taskResults.add(detail);
         taskProcessingDetailsTableView.scrollTo(taskResults.size() - 1);
+    }
+
+    private Task<Void> createTask(final Long mirroringTaskId, final boolean test) {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                try {
+                    viewModel.executingProperty().set(true);
+                    if (test) {
+                        taskService.test(mirroringTaskId, createAddRowHandler());
+                    } else {
+                        taskService.execute(mirroringTaskId, createAddRowHandler(), createFinishedHandler());
+                    }
+                    return null;
+                } finally {
+                    viewModel.executingProperty().set(false);
+                }
+            }
+
+            private Action<TaskProcessingDetail> createAddRowHandler() {
+                return new Action<TaskProcessingDetail>() {
+                    @Override
+                    public void execute(final TaskProcessingDetail obj) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                addDetailToProcessingTable(obj);
+                            }
+                        });
+                    }
+                };
+            }
+
+            private Action<Void> createFinishedHandler() {
+                return new Action<Void>() {
+                    @Override
+                    public void execute(Void obj) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                refreshTaskTable();
+                            }
+                        });
+                    }
+                };
+            }
+        };
     }
 }

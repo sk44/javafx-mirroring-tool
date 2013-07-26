@@ -12,22 +12,6 @@
   <children>
     <HBox prefHeight="315.0" prefWidth="798.0" AnchorPane.bottomAnchor="285.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0">
       <children>
-        <Button fx:id="buttonExecute" alignment="CENTER" mnemonicParsing="false" onAction="#handleExecuteTaskAction" text="Execute">
-          <HBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
-          </HBox.margin>
-        </Button>
-        <Button fx:id="buttonTest" mnemonicParsing="false" onAction="#handleTestTaskAction" text="Test" HBox.margin="$x1" />
-        <Button fx:id="buttonClearResults" mnemonicParsing="false" onAction="#handleClearResultsAction" text="Clear Results">
-          <HBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
-          </HBox.margin>
-        </Button>
-        <Separator orientation="VERTICAL" prefHeight="200.0">
-          <HBox.margin>
-            <Insets left="5.0" right="5.0" />
-          </HBox.margin>
-        </Separator>
         <Button fx:id="buttonNewTask" mnemonicParsing="false" onAction="#handleNewTaskAction" text="New Task">
           <HBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
@@ -39,6 +23,23 @@
           </HBox.margin>
         </Button>
         <Button fx:id="buttonDelete" mnemonicParsing="false" onAction="#handleDeleteTaskAction" text="Delete">
+          <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </HBox.margin>
+        </Button>
+        <Separator orientation="VERTICAL" prefHeight="200.0">
+          <HBox.margin>
+            <Insets left="5.0" right="5.0" />
+          </HBox.margin>
+        </Separator>
+        <Button fx:id="buttonTest" mnemonicParsing="false" onAction="#handleTestTaskAction" text="Test">
+          <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
+          </HBox.margin>
+        </Button>
+        <Button fx:id="buttonExecute" alignment="CENTER" mnemonicParsing="false" onAction="#handleExecuteTaskAction" text="Execute" HBox.margin="$x1" />
+        <Separator orientation="VERTICAL" prefHeight="200.0" />
+        <Button fx:id="buttonClearResults" mnemonicParsing="false" onAction="#handleClearResultsAction" text="Clear Results">
           <HBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" fx:id="x1" />
           </HBox.margin>
@@ -59,7 +60,7 @@
                 <TableColumn editable="false" prefWidth="200.0" text="Master" fx:id="taskMasterDirPathColumn" />
                 <TableColumn editable="false" prefWidth="200.0" text="Backup" fx:id="taskBackupDirPathColumn" />
                 <TableColumn editable="false" prefWidth="150.0" text="Last Executed" fx:id="taskLastExecutedColumn" />
-                <TableColumn editable="false" prefWidth="75.0" text="Result" />
+                <TableColumn editable="false" prefWidth="75.0" text="Result" fx:id="taskResultColumn" />
               </columns>
             </TableView>
           </children>
