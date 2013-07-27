@@ -37,7 +37,7 @@ public class JpaTaskRepository implements MirroringTaskRepository {
 
     @Override
     public void remove(MirroringTask task) {
-        em.remove(matches(task.getId()));
+        em.remove(matches(task.id));
     }
 
     @Override

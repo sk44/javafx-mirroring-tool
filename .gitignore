@@ -216,6 +216,7 @@ pip-log.txt
 
 .gradle
 .nb-gradle
+.nb-gradle-properties
 /private
 /mtdb
 /debug.keyStore

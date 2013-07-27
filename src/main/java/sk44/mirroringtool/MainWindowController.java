@@ -87,7 +87,7 @@ public class MainWindowController implements Initializable {
         if (task == null) {
             return;
         }
-        new Thread(createTask(task.getId(), false)).start();
+        new Thread(createTask(task.id, false)).start();
     }
 
     @FXML
@@ -96,7 +96,7 @@ public class MainWindowController implements Initializable {
         if (task == null) {
             return;
         }
-        new Thread(createTask(task.getId(), true)).start();
+        new Thread(createTask(task.id, true)).start();
     }
 
     @FXML
@@ -115,7 +115,7 @@ public class MainWindowController implements Initializable {
         if (task == null) {
             return;
         }
-        PassedParameters.INSTANCE.setTaskId(task.getId());
+        PassedParameters.INSTANCE.setTaskId(task.id);
         WindowEventListeners.INSTANCE.notify(WindowEvents.ON_OPEN_TASK_FORM);
     }
 
@@ -138,8 +138,8 @@ public class MainWindowController implements Initializable {
         viewModel = new MainWindowViewModel();
         taskService = new TaskService();
 
-        initializeTasks();
-        initializeTaskProcessingDetails();
+        initializeTaskTable();
+        initializeTaskProcessingDetailsTable();
         taskProcessingDetailsTableView.setItems(taskResults);
         buttonExecute.disableProperty().bind(viewModel.executingProperty().or(viewModel.selectedProperty().not()));
         buttonTest.disableProperty().bind(viewModel.executingProperty().or(viewModel.selectedProperty().not()));
@@ -164,41 +164,46 @@ public class MainWindowController implements Initializable {
         });
     }
 
-    private void initializeTasks() {
+    private void initializeTaskTable() {
         taskNameColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MirroringTask, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<MirroringTask, String> p) {
-                return new SimpleStringProperty(p.getValue().getName());
+                return new SimpleStringProperty(p.getValue().name);
             }
         });
         taskMasterDirPathColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MirroringTask, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<MirroringTask, String> p) {
-                return new SimpleStringProperty(p.getValue().getMasterDirPath());
+                return new SimpleStringProperty(p.getValue().masterDirPath);
             }
         });
         taskBackupDirPathColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MirroringTask, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<MirroringTask, String> p) {
-                return new SimpleStringProperty(p.getValue().getBackupDirPath());
+                return new SimpleStringProperty(p.getValue().backupDirPath);
             }
         });
         taskLastExecutedColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MirroringTask, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<MirroringTask, String> p) {
-                Date lastExecuted = p.getValue().getLastExecuted();
+                Date lastExecuted = p.getValue().lastExecuted;
                 if (lastExecuted == null) {
                     return new SimpleStringProperty(DATE_VALUE_FOR_NULL);
                 }
                 return new SimpleStringProperty(new DateTime(lastExecuted).toString(DATE_FORMAT_FOR_LAST_EXECUTED));
             }
         });
-        // TODO 残りの列
+        taskResultColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MirroringTask, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<MirroringTask, String> p) {
+                return new SimpleStringProperty(p.getValue().resultType.getDescription());
+            }
+        });
 
         refreshTaskTable();
     }
 
-    private void initializeTaskProcessingDetails() {
+    private void initializeTaskProcessingDetailsTable() {
         taskProcessingDetailsTableView.getItems().clear();
         processingDescriptionColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TaskProcessingDetail, String>, ObservableValue<String>>() {
             @Override

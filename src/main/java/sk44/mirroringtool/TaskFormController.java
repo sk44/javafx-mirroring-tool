@@ -68,9 +68,9 @@ public class TaskFormController implements Initializable {
     protected void handleOKAction(ActionEvent event) {
 
         // TODO validate
-        task.setName(taskName.getText());
-        task.setMasterDirPath(masterDirPath.getText());
-        task.setBackupDirPath(backupDirPath.getText());
+        task.name = taskName.getText();
+        task.masterDirPath = masterDirPath.getText();
+        task.backupDirPath = backupDirPath.getText();
 
         new TaskService().merge(task);
 
@@ -92,9 +92,9 @@ public class TaskFormController implements Initializable {
             task = new MirroringTask();
         } else {
             task = new TaskService().findBy(passedTaskId);
-            backupDirPath.textProperty().set(task.getBackupDirPath());
-            masterDirPath.textProperty().set(task.getMasterDirPath());
-            taskName.textProperty().set(task.getName());
+            backupDirPath.textProperty().set(task.backupDirPath);
+            masterDirPath.textProperty().set(task.masterDirPath);
+            taskName.textProperty().set(task.name);
         }
     }
 }

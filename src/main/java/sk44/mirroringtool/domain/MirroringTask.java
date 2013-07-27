@@ -10,6 +10,9 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Date;
+import java.util.Objects;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -28,31 +31,40 @@ import sk44.mirroringtool.util.Action;
  * @author sk
  */
 @Entity
+@Access(AccessType.FIELD)
 public class MirroringTask {
 
     private static final Logger logger = LoggerFactory.getLogger(MirroringTask.class);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Long id;
     @Column(nullable = false, length = 50)
-    private String name;
+    public String name;
     @Column(nullable = false, length = 300)
-    private String masterDirPath;
+    public String masterDirPath;
     @Column(nullable = false, length = 300)
-    private String backupDirPath;
+    public String backupDirPath;
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastExecuted;
-    @Column
+    public Date lastExecuted;
+    @Column(nullable = false)
     @Convert(converter = ActiveTypeConverter.class)
-    private ActiveType activeType;
+    public ActiveType activeType;
+    @Column(nullable = false)
+    @Convert(converter = ResultTypeConverter.class)
+    public ResultType resultType;
 
     public MirroringTask() {
         activeType = ActiveType.ACTIVE;
+        resultType = ResultType.NONE;
     }
 
     public void execute(Action<TaskProcessingDetail> handler) {
-        execute(false, handler);
+        if (execute(false, handler)) {
+            resultType = ResultType.SUCCESS;
+        } else {
+            resultType = ResultType.ERROR;
+        }
         lastExecuted = new Date();
     }
 
@@ -60,7 +72,7 @@ public class MirroringTask {
         execute(true, handler);
     }
 
-    private void execute(boolean test, Action<TaskProcessingDetail> handler) {
+    private boolean execute(boolean test, Action<TaskProcessingDetail> handler) {
         Path masterPath = new File(masterDirPath).toPath();
         Path backupPath = new File(backupDirPath).toPath();
         FileVisitor<Path> visitor = new TaskFileVisitor(masterPath, backupPath, test, handler);
@@ -68,57 +80,63 @@ public class MirroringTask {
         try {
             Files.walkFileTree(masterPath, visitor);
             Files.walkFileTree(backupPath, cleanVisitor);
+            return true;
         } catch (IOException ex) {
             // TODO notify error
             logger.error(ex.getMessage(), ex);
+            return false;
         }
+
     }
 
-    public Long getId() {
-        return id;
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + Objects.hashCode(this.id);
+        hash = 67 * hash + Objects.hashCode(this.name);
+        hash = 67 * hash + Objects.hashCode(this.masterDirPath);
+        hash = 67 * hash + Objects.hashCode(this.backupDirPath);
+        hash = 67 * hash + Objects.hashCode(this.lastExecuted);
+        hash = 67 * hash + Objects.hashCode(this.activeType);
+        hash = 67 * hash + Objects.hashCode(this.resultType);
+        return hash;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MirroringTask other = (MirroringTask) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.masterDirPath, other.masterDirPath)) {
+            return false;
+        }
+        if (!Objects.equals(this.backupDirPath, other.backupDirPath)) {
+            return false;
+        }
+        if (!Objects.equals(this.lastExecuted, other.lastExecuted)) {
+            return false;
+        }
+        if (this.activeType != other.activeType) {
+            return false;
+        }
+        if (this.resultType != other.resultType) {
+            return false;
+        }
+        return true;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMasterDirPath() {
-        return masterDirPath;
-    }
-
-    public void setMasterDirPath(String masterDirPath) {
-        this.masterDirPath = masterDirPath;
-    }
-
-    public String getBackupDirPath() {
-        return backupDirPath;
-    }
-
-    public void setBackupDirPath(String backupDirPath) {
-        this.backupDirPath = backupDirPath;
-    }
-
-    public Date getLastExecuted() {
-        return lastExecuted;
-    }
-
-    public void setLastExecuted(Date lastExecuted) {
-        this.lastExecuted = lastExecuted;
-    }
-
-    public ActiveType getActiveType() {
-        return activeType;
-    }
-
-    public void setActiveType(ActiveType activeType) {
-        this.activeType = activeType;
+    @Override
+    public String toString() {
+        return "MirroringTask{" + "id=" + id + '}';
     }
 }

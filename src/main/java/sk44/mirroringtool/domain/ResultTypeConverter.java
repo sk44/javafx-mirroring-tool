@@ -11,16 +11,16 @@ import javax.persistence.Converter;
  *
  * @author sk
  */
-@Converter //(autoApply = true)
-public class ActiveTypeConverter implements AttributeConverter<ActiveType, Integer> {
+@Converter
+public class ResultTypeConverter implements AttributeConverter<ResultType, Integer> {
 
     @Override
-    public Integer convertToDatabaseColumn(ActiveType attribute) {
+    public Integer convertToDatabaseColumn(ResultType attribute) {
         return attribute.getTypeValue();
     }
 
     @Override
-    public ActiveType convertToEntityAttribute(Integer dbData) {
-        return ActiveType.activeTypeOfValue(dbData);
+    public ResultType convertToEntityAttribute(Integer dbData) {
+        return ResultType.resultTypeOfValue(dbData);
     }
 }
