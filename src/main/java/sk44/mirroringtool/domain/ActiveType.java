@@ -10,11 +10,16 @@ package sk44.mirroringtool.domain;
  */
 public enum ActiveType {
 
-    ACTIVE(1), DISABLED(2);
+    ACTIVE(1, true), DISABLED(2, false);
     private final int typeValue;
+    private final boolean active;
 
     public Integer getTypeValue() {
         return typeValue;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     public static ActiveType activeTypeOfValue(Integer value) {
@@ -26,7 +31,8 @@ public enum ActiveType {
         throw new IllegalArgumentException("value " + value + " is not exists.");
     }
 
-    private ActiveType(int typeValue) {
+    private ActiveType(int typeValue, boolean active) {
         this.typeValue = typeValue;
+        this.active = active;
     }
 }

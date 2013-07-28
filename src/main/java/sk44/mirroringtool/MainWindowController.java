@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,11 +17,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.util.Callback;
 import org.joda.time.DateTime;
 import sk44.mirroringtool.application.TaskService;
@@ -60,6 +63,8 @@ public class MainWindowController implements Initializable {
     @FXML
     TableView<MirroringTask> taskTableView;
     @FXML
+    TableColumn<MirroringTask, Boolean> taskAutoColumn;
+    @FXML
     TableColumn<MirroringTask, String> taskNameColumn;
     @FXML
     TableColumn<MirroringTask, String> taskMasterDirPathColumn;
@@ -88,6 +93,17 @@ public class MainWindowController implements Initializable {
             return;
         }
         new Thread(createTask(task.id, false)).start();
+    }
+
+    @FXML
+    protected void handleExecuteAllAction(ActionEvent event) {
+        List<MirroringTask> items = taskTableView.getItems();
+        for (MirroringTask t : items) {
+            if (t.auto) {
+                // TODO タスク実行
+                System.out.println(t.id);
+            }
+        }
     }
 
     @FXML
@@ -165,6 +181,21 @@ public class MainWindowController implements Initializable {
     }
 
     private void initializeTaskTable() {
+        taskAutoColumn.setCellFactory(CheckBoxTableCell.forTableColumn(taskAutoColumn));
+        taskAutoColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MirroringTask, Boolean>, ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<MirroringTask, Boolean> p) {
+                return new SimpleBooleanProperty(p.getValue().auto);
+            }
+        });
+        // TODO 動かない
+        // see: https://forums.oracle.com/thread/2533651
+        taskAutoColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<MirroringTask, Boolean>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<MirroringTask, Boolean> t) {
+                System.out.println(t.getNewValue());
+            }
+        });
         taskNameColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MirroringTask, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<MirroringTask, String> p) {

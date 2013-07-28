@@ -48,14 +48,16 @@ public class MirroringTask {
     @Temporal(TemporalType.TIMESTAMP)
     public Date lastExecuted;
     @Column(nullable = false)
-    @Convert(converter = ActiveTypeConverter.class)
-    public ActiveType activeType;
+    public boolean auto;
+//    @Column(nullable = false)
+//    @Convert(converter = ActiveTypeConverter.class)
+//    public ActiveType activeType;
     @Column(nullable = false)
     @Convert(converter = ResultTypeConverter.class)
     public ResultType resultType;
 
     public MirroringTask() {
-        activeType = ActiveType.ACTIVE;
+        auto = true;
         resultType = ResultType.NONE;
     }
 
@@ -97,7 +99,7 @@ public class MirroringTask {
         hash = 67 * hash + Objects.hashCode(this.masterDirPath);
         hash = 67 * hash + Objects.hashCode(this.backupDirPath);
         hash = 67 * hash + Objects.hashCode(this.lastExecuted);
-        hash = 67 * hash + Objects.hashCode(this.activeType);
+        hash = 67 * hash + Objects.hashCode(this.auto);
         hash = 67 * hash + Objects.hashCode(this.resultType);
         return hash;
     }
@@ -126,7 +128,7 @@ public class MirroringTask {
         if (!Objects.equals(this.lastExecuted, other.lastExecuted)) {
             return false;
         }
-        if (this.activeType != other.activeType) {
+        if (this.auto != other.auto) {
             return false;
         }
         if (this.resultType != other.resultType) {
