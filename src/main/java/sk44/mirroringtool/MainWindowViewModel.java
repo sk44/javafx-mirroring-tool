@@ -35,6 +35,17 @@ public class MainWindowViewModel {
             return "selected";
         }
     };
+    private BooleanProperty onCancelled = new BooleanPropertyBase() {
+        @Override
+        public Object getBean() {
+            return MainWindowViewModel.this;
+        }
+
+        @Override
+        public String getName() {
+            return "onCancelled";
+        }
+    };
 
     public BooleanProperty executingProperty() {
         return executing;
@@ -42,5 +53,9 @@ public class MainWindowViewModel {
 
     public BooleanProperty selectedProperty() {
         return selected;
+    }
+
+    public BooleanProperty onCancelledProperty() {
+        return onCancelled;
     }
 }

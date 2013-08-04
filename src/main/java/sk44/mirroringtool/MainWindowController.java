@@ -32,6 +32,7 @@ import sk44.mirroringtool.domain.MirroringTaskRepository;
 import sk44.mirroringtool.domain.TaskProcessingDetail;
 import sk44.mirroringtool.infrastructure.persistence.jpa.JpaTaskRepository;
 import sk44.mirroringtool.util.Action;
+import sk44.mirroringtool.util.Func;
 
 /**
  * FXML Controller class
@@ -59,6 +60,8 @@ public class MainWindowController implements Initializable {
     Button buttonEdit;
     @FXML
     Button buttonDelete;
+    @FXML
+    Button buttonStop;
     // task table ----------
     @FXML
     TableView<MirroringTask> taskTableView;
@@ -92,7 +95,9 @@ public class MainWindowController implements Initializable {
         if (task == null) {
             return;
         }
-        new Thread(createTask(task.id, false)).start();
+        Thread t = new Thread(createTask(task.id, false));
+        t.setDaemon(true);
+        t.start();
     }
 
     @FXML
@@ -107,12 +112,19 @@ public class MainWindowController implements Initializable {
     }
 
     @FXML
+    protected void handleStopAction(ActionEvent event) {
+        viewModel.onCancelledProperty().set(true);
+    }
+
+    @FXML
     protected void handleTestTaskAction(ActionEvent event) {
         final MirroringTask task = taskTableView.getSelectionModel().getSelectedItem();
         if (task == null) {
             return;
         }
-        new Thread(createTask(task.id, true)).start();
+        Thread t = new Thread(createTask(task.id, true));
+        t.setDaemon(true);
+        t.start();
     }
 
     @FXML
@@ -164,6 +176,7 @@ public class MainWindowController implements Initializable {
         buttonNewTask.disableProperty().bind(viewModel.executingProperty());
         buttonEdit.disableProperty().bind(viewModel.executingProperty().or(viewModel.selectedProperty().not()));
         buttonDelete.disableProperty().bind(viewModel.executingProperty().or(viewModel.selectedProperty().not()));
+        buttonStop.disableProperty().bind(viewModel.executingProperty().not());
 
         taskTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MirroringTask>() {
             @Override
@@ -291,10 +304,12 @@ public class MainWindowController implements Initializable {
             protected Void call() throws Exception {
                 try {
                     viewModel.executingProperty().set(true);
+                    viewModel.onCancelledProperty().set(false);
                     if (test) {
-                        taskService.test(mirroringTaskId, createAddRowHandler());
+                        taskService.test(mirroringTaskId, createAddRowHandler(), createStop());
                     } else {
-                        taskService.execute(mirroringTaskId, createAddRowHandler(), createFinishedHandler());
+                        taskService.execute(mirroringTaskId, createAddRowHandler(), createStop());
+                        onExecutionFinished();
                     }
                     return null;
                 } finally {
@@ -316,16 +331,21 @@ public class MainWindowController implements Initializable {
                 };
             }
 
-            private Action<Void> createFinishedHandler() {
-                return new Action<Void>() {
+            private void onExecutionFinished() {
+                Platform.runLater(new Runnable() {
                     @Override
-                    public void execute(Void obj) {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                refreshTaskTable();
-                            }
-                        });
+                    public void run() {
+                        refreshTaskTable();
+                    }
+                });
+            }
+
+            private Func<Boolean> createStop() {
+                return new Func<Boolean>() {
+                    @Override
+                    public Boolean execute() {
+                        // Task の cancel を使うとスレッドごと止まってしまい、実行結果の保存などがスキップされてしまう
+                        return viewModel.onCancelledProperty().get();
                     }
                 };
             }

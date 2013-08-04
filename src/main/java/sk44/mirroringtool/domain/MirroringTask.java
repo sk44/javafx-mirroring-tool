@@ -6,7 +6,6 @@ package sk44.mirroringtool.domain;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Date;
@@ -24,6 +23,7 @@ import javax.persistence.TemporalType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sk44.mirroringtool.util.Action;
+import sk44.mirroringtool.util.Func;
 
 /**
  * Mirroring task entity.
@@ -61,32 +61,31 @@ public class MirroringTask {
         resultType = ResultType.NONE;
     }
 
-    public void execute(Action<TaskProcessingDetail> handler) {
-        if (execute(false, handler)) {
-            resultType = ResultType.SUCCESS;
-        } else {
-            resultType = ResultType.ERROR;
-        }
+    public void execute(Action<TaskProcessingDetail> handler, Func<Boolean> stop) {
+        resultType = execute(false, handler, stop);
         lastExecuted = new Date();
     }
 
-    public void test(Action<TaskProcessingDetail> handler) {
-        execute(true, handler);
+    public void test(Action<TaskProcessingDetail> handler, Func<Boolean> stop) {
+        execute(true, handler, stop);
     }
 
-    private boolean execute(boolean test, Action<TaskProcessingDetail> handler) {
+    private ResultType execute(boolean test, Action<TaskProcessingDetail> handler, Func<Boolean> stop) {
         Path masterPath = new File(masterDirPath).toPath();
         Path backupPath = new File(backupDirPath).toPath();
-        FileVisitor<Path> visitor = new TaskFileVisitor(masterPath, backupPath, test, handler);
-        FileVisitor<Path> cleanVisitor = new CleanFileVisitor(masterPath, backupPath, test, handler);
+        TaskFileVisitor visitor = new TaskFileVisitor(masterPath, backupPath, test, handler, stop);
+        CleanFileVisitor cleanVisitor = new CleanFileVisitor(masterPath, backupPath, test, handler, stop);
         try {
             Files.walkFileTree(masterPath, visitor);
+            if (visitor.getResultType() == ResultType.STOP) {
+                return visitor.getResultType();
+            }
             Files.walkFileTree(backupPath, cleanVisitor);
-            return true;
+            return cleanVisitor.getResultType();
         } catch (IOException ex) {
             // TODO notify error
             logger.error(ex.getMessage(), ex);
-            return false;
+            return ResultType.ERROR;
         }
 
     }

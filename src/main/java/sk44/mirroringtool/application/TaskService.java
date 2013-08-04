@@ -5,10 +5,11 @@ package sk44.mirroringtool.application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sk44.mirroringtool.domain.MirroringTask;
-import sk44.mirroringtool.domain.TaskProcessingDetail;
 import sk44.mirroringtool.domain.MirroringTaskRepository;
+import sk44.mirroringtool.domain.TaskProcessingDetail;
 import sk44.mirroringtool.infrastructure.persistence.jpa.RepositoriesContext;
 import sk44.mirroringtool.util.Action;
+import sk44.mirroringtool.util.Func;
 
 /**
  * Application service.
@@ -39,7 +40,7 @@ public class TaskService {
         }
     }
 
-    public void execute(Long taskId, Action<TaskProcessingDetail> processingDetailsHandler, Action<Void> callback) {
+    public void execute(Long taskId, Action<TaskProcessingDetail> processingDetailsHandler, Func<Boolean> stop) {
         try (RepositoriesContext context = new RepositoriesContext()) {
             MirroringTaskRepository repos = context.createTaskRepository();
             MirroringTask task = repos.matches(taskId);
@@ -47,18 +48,16 @@ public class TaskService {
                 logger.warn("task [" + taskId + "] is not found.");
                 return;
             }
-            task.execute(processingDetailsHandler);
+            task.execute(processingDetailsHandler, stop);
             context.saveChanges();
         }
-        // TODO null 渡すのがアレ
-        callback.execute(null);
     }
 
     public void executeAll() {
         // TODO
     }
 
-    public void test(Long taskId, Action<TaskProcessingDetail> processingDetailsHandler) {
+    public void test(Long taskId, Action<TaskProcessingDetail> processingDetailsHandler, Func<Boolean> stop) {
         try (RepositoriesContext context = new RepositoriesContext()) {
             MirroringTaskRepository repos = context.createTaskRepository();
             MirroringTask task = repos.matches(taskId);
@@ -66,7 +65,7 @@ public class TaskService {
                 logger.warn("task [" + taskId + "] is not found.");
                 return;
             }
-            task.test(processingDetailsHandler);
+            task.test(processingDetailsHandler, stop);
         }
     }
 }
